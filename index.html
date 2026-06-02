@@ -2,6 +2,7 @@
 <html>
 <head>
 <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>文獻與數據清單</title>
 <style>
     body {
@@ -58,7 +59,25 @@
     .bg-prostate {
         background-image: linear-gradient(rgba(0,0,0,0.4), rgba(0,0,0,0.4)), url('https://images.unsplash.com/photo-1457369804613-52c61a468e7d?w=800&auto=format&fit=crop&q=60') !important;
     }
-    
+    /* ==========================================
+   手機版自適應微調 (螢幕寬度 600px 以下生效)
+   ========================================== */
+@media (max-width: 600px) {
+    body {
+        padding: 12px; /* 縮小手機版網頁左右留白，留給內容更多空間 */
+    }
+
+    h1 {
+        font-size: 24px; /* 稍微縮小手機版的大標題，避免折行太難看 */
+    }
+
+    /* 調整底圖字卡在手機上的表現 */
+    #list a.card-bg {
+        height: 90px;      /* 稍微縮短手機版的字卡高度，看起來更精緻 */
+        padding: 15px;     /* 縮小內襯 */
+        font-size: 16px;   /* 微調字卡內的字體大小 */
+    }
+}
 </style>
 </head>
 
