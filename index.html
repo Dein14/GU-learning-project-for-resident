@@ -2,37 +2,85 @@
 <html>
 <head>
 <meta charset="UTF-8">
-<title>GU Learning Project</title>
+<title>文獻與數據清單</title>
+<style>
+    body {
+        font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+        background-color: #f8f9fa;
+        padding: 20px;
+        max-width: 800px;
+        margin: 0 auto;
+    }
+
+    h1 { color: #343a40; text-align: center; margin-bottom: 25px; }
+
+    #search {
+        padding: 12px; width: 100%; box-sizing: border-box;
+        border: 2px solid #e9ecef; border-radius: 25px; /* 膠囊狀搜尋欄 */
+        font-size: 16px; margin-bottom: 25px; text-align: center;
+        outline: none; transition: 0.3s;
+    }
+    #search:focus { border-color: #495057; }
+
+    #list { list-style: none; padding: 0; }
+    #list li { margin-bottom: 20px; }
+
+    /* 底圖卡片設定 */
+    #list a {
+        display: block;
+        height: 100px; /* 給卡片一個高度 */
+        padding: 20px;
+        box-sizing: border-box;
+        border-radius: 12px;
+        color: white; /* 圖片上的字體改為白色 */
+        text-decoration: none;
+        font-size: 18px;
+        font-weight: bold;
+        text-shadow: 1px 1px 5px rgba(0,0,0,0.7); /* 幫文字加陰影，防止被背景圖吃掉 */
+        
+        /* 預設背景圖（使用 Unsplash 醫學/科技感的漸層縮圖） */
+        background-image: linear-gradient(rgba(0,0,0,0.3), rgba(0,0,0,0.3)), url('https://images.unsplash.com/photo-1507668077129-56e32842fceb?w=800&auto=format&fit=crop&q=60');
+        background-size: cover;
+        background-position: center;
+        
+        display: flex;
+        align-items: center; /* 讓文字在卡片中垂直居中 */
+        transition: transform 0.3s, box-shadow 0.3s;
+    }
+
+    /* 懸停效果 */
+    #list a:hover {
+        transform: scale(1.02); /* 卡片微微放大 */
+        box-shadow: 0 8px 20px rgba(0,0,0,0.15);
+    }
+
+    /* 💡 進階：如果你想讓不同的卡片有不同的底圖，可以像下面這樣個別指定背景 */
+    .bg-prostate {
+        background-image: linear-gradient(rgba(0,0,0,0.4), rgba(0,0,0,0.4)), url('https://images.unsplash.com/photo-1532187863486-abf9d39d6618?w=800&auto=format&fit=crop&q=60') !important;
+    }
+    
+</style>
 </head>
 
 <body>
 
-<h1>泌尿科住院醫師的學習清單</h1>
+<h1>📂 機智GU住院醫師</h1>
 
-<input id="search" placeholder="搜尋..." style="padding:10px;width:90%">
+<input id="search" placeholder="🔍 輸入關鍵字篩選報告...">
 
 <ul id="list">
-    <li><a href="pca-trials-mobile.html">攝護腺癌trial</a></li>
-    <li><a href="B.html">B.html</a></li>
-    <li><a href="C.html">C.html</a></li>
+    <li><a href="pca-trials-mobile.html" class="bg-prostate">📊 攝護腺癌臨床試驗</a></li>
+    <li><a href="README.md" class="bg-readme">📝 專案說明文件 (README)</a></li>
 </ul>
 
 <script>
 let input = document.getElementById("search");
-
 input.addEventListener("keyup", function(){
-
     let keyword = this.value.toLowerCase();
-
     document.querySelectorAll("#list li").forEach(li => {
-
         li.style.display =
-            li.innerText.toLowerCase().includes(keyword)
-            ? ""
-            : "none";
-
+            li.innerText.toLowerCase().includes(keyword) ? "" : "none";
     });
-
 });
 </script>
 
