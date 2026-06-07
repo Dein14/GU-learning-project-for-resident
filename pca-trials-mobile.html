@@ -125,18 +125,20 @@ body{font-family:'Noto Sans TC',sans-serif;background:var(--bg);color:var(--text
 </div>
 <script>
 const DATA=[
-{name:"CHAARTED",year:2015,stage:"mCSPC",
-inclusion:"mCSPC（影像確認轉移）；ADT 開始 <120 天；無先前化療；ECOG 0-2",
+{name:"CHAARTED",year:2015 n=790,stage:"mCSPC",
+inclusion:"mCSPC（影像確認轉移）；過去使用adjuvant ADT<24m且progression超過12m, mCSPC現在使用ADT<120 天；無先前化療；ECOG 0-2",
 exclusion:"先前 docetaxel；嚴重 peripheral neuropathy；ANC <1500；非去勢抵抗",
 regimen:{exp:"ADT + Docetaxel 75 mg/m² IV",schedule:"q3w（每 3 週 1 次）",duration:"共 6 cycles（約 18 週）",ctrl:"ADT alone（持續）"},
 followUp:"53.2 個月",primary:"OS",
 outcomes:[
-{l:"OS HR（high-volume）",v:"0.61（57.6 vs 44.0 mo）",t:"pos"},
-{l:"OS HR（low-volume）",v:"0.60（p=0.44，無統計顯著）",t:"neu"},
-{l:"Porgression(BCR/rad/clinical) HR",v:"0.61（20.2 vs 11.7 mo）",t:"pos"},
+{l:"OS HR ",v:"0.61（57.6 vs 44.0 mo）",t:"pos"},
+{l:"OS HR（high-volume）",v:"0.60（49.2 vs 32.2 mo）",t:"pos"},
+{l:"OS HR（low-volume）",v:"0.60（NR vs NR）",t:"neu"},
+{l:"6m PSA <0.2 ng/mL",v:"32.0% vs 19.6%",t:"pos"}],
 {l:"1y PSA <0.2 ng/mL",v:"27.7% vs 16.8%",t:"pos"}],
-ae:"Febrile neutropenia 6.2%；Sensory neuropathy 1.5%；Alopecia（脫髮）",
-conclusion:"對於 <strong>≥4 骨轉移或有內臟轉移（high-volume）的 mCSPC 病人</strong>，CHAARTED 試驗顯示使用 <strong>ADT + Docetaxel 6 cycles</strong> 可延長 OS 約 13.6 個月（HR 0.61），但 low-volume 病人未達統計顯著。需注意 febrile neutropenia（6.2%）風險，適合體能狀態佳者。",
+{l:"Time to CRPC HR",v:"0.61（20.2 vs 11.7 mo）",t:"pos"},
+{l:"Time to clinical progression HR",v:"0.61（33.0 vs 19.8 mo）",t:"pos"},
+conclusion:"對於 <strong> High-volume 的 mCSPC 病人</strong>，CHAARTED 試驗顯示使用 <strong>ADT + Docetaxel 6 cycles</strong> 可延長 OS 約 17 個月，但 low-volume 病人未達統計顯著。",
 importance:"🔑 mCSPC 第一個確認化療 combination 改善 OS 的 Phase III，建立「volume」分層概念，開啟 mCSPC 積極治療時代。後續 PEACE-1、ARASENS 的 triplet 設計均以此為基礎。",
 chips:[{t:"ADT + Doc",c:"regimen"},{t:"OS HR 0.61",c:"good"},{t:"high-vol only",c:"warn"}]},
 
