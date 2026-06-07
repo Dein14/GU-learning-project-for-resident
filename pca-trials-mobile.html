@@ -507,9 +507,9 @@ function buildCards(){
     list.appendChild(anchor);
     DATA.filter(t=>t.stage===stage).forEach((trial,idx)=>{
       const card=document.createElement("div");
-      const cls=sc(.stage);
+      const cls=sc(trial.stage);
       card.className="card";
-      card.dataset.stage=.stage;
+      card.dataset.stage=trial.stage;
       card.dataset.search=[.name,trial.inclusion,trial.regimen.exp,trial.regimen.ctrl,trial.conclusion,trial.importance].join(" ").toLowerCase();
       const chipsHtml=trial.chips.map(c=>`<span class="chip ${c.c}">${c.t}</span>`).join("");
       const outHtml=trial.outcomes.map(o=>`<div class="outcome-row"><span class="out-label">${o.l}</span><span class="out-val ${o.t}">${o.v}</span></div>`).join("");
