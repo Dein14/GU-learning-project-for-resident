@@ -514,6 +514,14 @@ function buildCards(){
       card.dataset.search=[.name,trial.inclusion,trial.regimen.exp,trial.regimen.ctrl,trial.conclusion,trial.importance].join(" ").toLowerCase();
       const chipsHtml=trial.chips.map(c=>`<span class="chip ${c.c}">${c.t}</span>`).join("");
       const outHtml=trial.outcomes.map(o=>`<div class="outcome-row"><span class="out-label">${o.l}</span><span class="out-val ${o.t}">${o.v}</span></div>`).join("");
+    let imageHtml = "";
+      if (trial.image) {
+        imageHtml = `
+          <div class="section" style="padding: 10px 14px; text-align: center;">
+            <img src="${trial.image}" alt="${trial.name} 圖表" style="width:100%; max-width:100%; border-radius:8px; display:block; border:1px solid var(--border2); margin: 0 auto;">
+          </div>
+        `;
+      }
       card.innerHTML=`
         <div class="card-head" onclick="toggle('B${idx}${cls}','C${idx}${cls}')">
           <div class="stage-bar bar-${cls}"></div>
