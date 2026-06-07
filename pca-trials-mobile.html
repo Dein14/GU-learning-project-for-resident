@@ -125,10 +125,11 @@ body{font-family:'Noto Sans TC',sans-serif;background:var(--bg);color:var(--text
 </div>
 <script>
 const DATA=[
-{name:"CHAARTED",year:2015,stage:"mCSPC",
+{name:"CHAARTED",year:2015/2018,stage:"mCSPC",
 inclusion:"mCSPC（影像確認轉移）；過去使用ADT<24m且停藥超過12m後progression；mCSPC使用ADT<120 天；無先前化療；ECOG 0-2",
 exclusion:"先前 docetaxel；嚴重 peripheral neuropathy；ANC <1500；非去勢抵抗",
 regimen:{exp:"ADT + Docetaxel 75 mg/m² IV",schedule:"q3w（每 3 週 1 次）",duration:"共 6 cycles（約 18 週）",ctrl:"ADT alone（持續）"},
+followUp:"53.2 個月",
 outcomes:[
 {l:"OS HR ",v:"0.61（57.6 vs 44.0 mo）",t:"pos"},
 {l:"OS HR（high-volume）",v:"0.60（49.2 vs 32.2 mo）",t:"pos"},
@@ -140,22 +141,24 @@ outcomes:[
 ae:"Gr4: neutropenia 9%, thromboembolism 0.5%",
 conclusion:"對於 <strong> High-volume (visceral mets or ≥4 bone mets 至少一處中軸骨外) 的 mCSPC 病人</strong>，CHAARTED 試驗顯示使用 <strong>ADT + Docetaxel 6 cycles</strong> 可延長 OS 約 17 個月，但 low-volume 病人未達統計顯著。",
 importance:"🔑 mCSPC 第一個確認化療 combination 改善 OS 的 Phase III，建立「volume」分層概念，開啟 mCSPC 積極治療時代。後續 PEACE-1、ARASENS 的 triplet 設計均以此為基礎。",
-chips:[{t:"ADT + Doc",c:"regimen"},{t:"OS HR 0.61",c:"good"},{t:"high-vol only",c:"warn"}]},
+chips:[{t:"ADT + Doc",c:"regimen"}]},
 
-{name:"LATITUDE",year:2017,stage:"mCSPC",
-inclusion:"新診斷 high-risk mCSPC；≥2/3 高風險：Gleason≥8、骨轉≥3 處、內臟轉移",
-exclusion:"先前 systemic therapy；CTP-B/C 肝功能異常；eGFR<30；中重度 CV 疾病",
-regimen:{exp:"ADT + Abiraterone 1000 mg/day PO（空腹）+ Prednisone 5 mg bid PO",schedule:"每日持續口服",duration:"直至疾病進展或不耐受（長期）",ctrl:"ADT + Placebo + Placebo"},
-followUp:"51.8 個月",primary:"OS + rPFS（co-primary）",
+{name:"LATITUDE",year:2017/2019,stage:"mCSPC",
+inclusion:"新診斷 high-risk mCSPC；≥2 high-risk factors(Gleason≥8、骨轉≥3 處、內臟轉移)",
+exclusion:"先前chemo/RT/轉移處手術(可接受<3m LHRH ADT/睪丸切除、一次palliative RT/OP)",
+regimen:{exp:"ADT + Abiraterone 1000 mg QD(=四顆) + Prednisone 5 mg QD ",schedule:"每日持續口服",duration:"直至疾病進展或不耐受）",ctrl:"ADT + Pred + Placebo"},
+ followUp:"51.8 個月",
 outcomes:[
-{l:"OS HR",v:"0.62（NR vs 34.7 mo）",t:"pos"},
-{l:"rPFS HR",v:"0.47（33 vs 14.8 mo）",t:"pos"},
+{l:"OS HR",v:"0.66（53.3 vs 36.5 mo）",t:"pos"},
+{l:"High vol OS HR",v:"0.62（49.7 vs 33.3 mo）",t:"pos"},
+{l:"High vol rPFS HR",v:"0.46（33.1 vs 14.7 mo）",t:"pos"},
+{l:"Low vol rPFS HR",v:"0.59（49.8 vs 22.4 mo）",t:"pos"},
 {l:"PSA <0.2 ng/mL",v:"62% vs 21%",t:"pos"},
 {l:"PSA 50% response",v:"91.5% vs 66.7%",t:"pos"}],
-ae:"Hypokalemia 20%；Hypertension 20%；AST/ALT 上升（需每月監測肝功能）",
-conclusion:"對於 <strong>新診斷 high-risk mCSPC（≥2 項 LATITUDE 高風險標準）的病人</strong>，LATITUDE 試驗顯示 <strong>ADT + Abiraterone 1000 mg/day + Prednisone（每日空腹口服）</strong> 可使 OS（HR 0.62）和 rPFS（HR 0.47）顯著改善。需規律監測電解質（hypokalemia 20%）、血壓及肝功能。",
+ae:"Hypertension 41%；Hypokalemia 24%；AST/ALT 上升（需每月監測肝功能）24%",
+conclusion:"對於 <strong>新診斷 high-risk mCSPC（≥2 項 LATITUDE 高風險標準）的病人</strong>，LATITUDE 試驗顯示 <strong>ADT + Abiraterone 1000 mg + Prednisone </strong> 可使 OS 和 rPFS 顯著改善。需規律監測電解質（hypokalemia 20%）、血壓及肝功能。",
 importance:"🔑 mCSPC 第一個 ARPI combination Phase III，建立「high-risk feature 選擇族群」概念，與 STAMPEDE-Abi 共同奠定 abiraterone 在 mCSPC 的標準治療地位。",
-chips:[{t:"ADT + Abi + Pred",c:"regimen"},{t:"OS HR 0.62",c:"good"},{t:"rPFS HR 0.47",c:"good"}]},
+chips:[{t:"ADT + Abi + Pred",c:"regimen"}]},
 
 {name:"STAMPEDE (Abi)",year:2017,stage:"mCSPC",
 inclusion:"高風險局部進展或 mCSPC；ADT 開始 ≤12 週；PSA >4 ng/mL",
