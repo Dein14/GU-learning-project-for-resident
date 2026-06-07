@@ -161,6 +161,7 @@ importance:"🔑 mCSPC 第一個 ARPI combination Phase III，建立「high-risk
 chips:[{t:"ADT + Abi + Pred",c:"regimen"}]},
 
 {name:"STAMPEDE (Arm G)",year:2017,stage:"mCSPC",
+image: "Arms-of-the-STAMPEDE-trial-platform-over-time.jpg",
 inclusion:"高風險局部進展或 mCSPC；ADT 開始 ≤12 週；PSA >4 ng/mL",
 exclusion:"先前 abiraterone 或 docetaxel；CTP-B/C 肝功能異常；長期 corticosteroid 需求",
 regimen:{exp:"Standard of care(ADT) + Abiraterone 1000 mg/day PO（空腹）+ Prednisolone 5 mg/day PO",schedule:"每日持續口服",duration:"直至疾病進展（長期）",ctrl:"SOC + Placebo"},
@@ -513,7 +514,15 @@ function buildCards(){
       card.dataset.search=[trial.name,trial.inclusion,trial.regimen.exp,trial.regimen.ctrl,trial.conclusion,trial.importance].join(" ").toLowerCase();
       const chipsHtml=trial.chips.map(c=>`<span class="chip ${c.c}">${c.t}</span>`).join("");
       const outHtml=trial.outcomes.map(o=>`<div class="outcome-row"><span class="out-label">${o.l}</span><span class="out-val ${o.t}">${o.v}</span></div>`).join("");
-      card.innerHTML=`
+      let imageHtml = "";
+      if (trial.image) {
+        card.innerHTML=`
+          imageHtml = `
+            <div class="section" style="padding: 10px 14px; text-align: center;">
+              <img src="${trial.image}" alt="${trial.name} 圖表" style="width:100%; max-width:100%; border-radius:8px; display:block; border:1px solid var(--border2); margin: 0 auto;">
+            </div>
+          `;
+        }
         <div class="card-head" onclick="toggle('B${idx}${cls}','C${idx}${cls}')">
           <div class="stage-bar bar-${cls}"></div>
           <div class="card-meta">
