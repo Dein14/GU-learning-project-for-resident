@@ -505,7 +505,7 @@ function buildCards(){
     anchor.id="anchor-"+stage;
     anchor.innerHTML=`<div class="stage-header sh-${sc(stage)}"><span>${stageIcon(stage)}</span>${stage}</div>`;
     list.appendChild(anchor);
-    DATA.filter(t=>t.stage===stage).forEach((,idx)=>{
+    DATA.filter(t=>t.stage===stage).forEach((trial,idx)=>{
       const card=document.createElement("div");
       const cls=sc(.stage);
       card.className="card";
