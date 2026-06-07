@@ -141,7 +141,7 @@ outcomes:[
 ae:"Gr4: neutropenia 9%, thromboembolism 0.5%",
 conclusion:"對於 <strong> High-volume (visceral mets or ≥4 bone mets 至少一處中軸骨外) 的 mCSPC 病人</strong>，CHAARTED 試驗顯示使用 <strong>ADT + Docetaxel 6 cycles</strong> 可延長 OS 約 17 個月，但 low-volume 病人未達統計顯著。",
 importance:"🔑 mCSPC 第一個確認化療 combination 改善 OS 的 Phase III，建立「volume」分層概念，開啟 mCSPC 積極治療時代。後續 PEACE-1、ARASENS 的 triplet 設計均以此為基礎。",
-chips:[{t:"ADT + Doc",c:"regimen"},{t:"High volume",c:"warn"}]},
+chips:[{t:"ADT + Doc",c:"regimen"}]},
 
 {name:"LATITUDE",year:"2017 / 2019(update)",stage:"mCSPC",
 inclusion:"新診斷 high-risk mCSPC；≥2 high-risk factors(Gleason≥8、骨轉≥3 處、內臟轉移)",
@@ -155,13 +155,12 @@ outcomes:[
 {l:"Low vol rPFS HR",v:"0.59（49.8 vs 22.4 mo）",t:"pos"},
 {l:"PSA <0.2 ng/mL",v:"62% vs 21%",t:"pos"},
 {l:"PSA 50% response",v:"91.5% vs 66.7%",t:"pos"}],
-ae:"Hypertension 41%；Hypokalemia 24%；AST/ALT 上升（需每月監測肝功能）24%",
-conclusion:"對於 <strong>新診斷 high-risk mCSPC（≥2 項 LATITUDE 高風險標準）的病人</strong>，LATITUDE 試驗顯示 <strong>ADT + Abiraterone 1000 mg + Prednisone </strong> 可使 OS 和 rPFS 顯著改善。需規律監測電解質（hypokalemia 20%）、血壓及肝功能。",
+ae:"Hypertension 41%；Hypokalemia 24%；AST/ALT上升 24%",
+conclusion:"對於 <strong>新診斷 high-risk mCSPC（≥2 項 LATITUDE 高風險標準）的病人</strong>，LATITUDE 試驗顯示 <strong>ADT + Abiraterone 1000 mg + Prednisone </strong> 可使 OS 和 rPFS 顯著改善。需規律監測血壓、電解質及肝功能。",
 importance:"🔑 mCSPC 第一個 ARPI combination Phase III，建立「high-risk feature 選擇族群」概念，與 STAMPEDE-Abi 共同奠定 abiraterone 在 mCSPC 的標準治療地位。",
-chips:[{t:"ADT + Abi + Pred",c:"regimen"},{t:"High risk",c:"warn"}]},
+chips:[{t:"ADT + Abi + Pred",c:"regimen"}]},
 
 {name:"STAMPEDE (Arm G)",year:2017,stage:"mCSPC",
-image:"Arms-of-the-STAMPEDE--platform-over-time.jpg",
 inclusion:"高風險局部進展或 mCSPC；ADT 開始 ≤12 週；PSA >4 ng/mL",
 exclusion:"先前 abiraterone 或 docetaxel；CTP-B/C 肝功能異常；長期 corticosteroid 需求",
 regimen:{exp:"Standard of care(ADT) + Abiraterone 1000 mg/day PO（空腹）+ Prednisolone 5 mg/day PO",schedule:"每日持續口服",duration:"直至疾病進展（長期）",ctrl:"SOC + Placebo"},
@@ -506,22 +505,14 @@ function buildCards(){
     anchor.id="anchor-"+stage;
     anchor.innerHTML=`<div class="stage-header sh-${sc(stage)}"><span>${stageIcon(stage)}</span>${stage}</div>`;
     list.appendChild(anchor);
-    DATA.filter(t=>t.stage===stage).forEach((,idx)=>{
+    DATA.filter(t=>t.stage===stage).forEach((trial,idx)=>{
       const card=document.createElement("div");
-      const cls=sc(.stage);
+      const cls=sc(trial.stage);
       card.className="card";
-      card.dataset.stage=.stage;
-      card.dataset.search=[.name,trial.inclusion,trial.regimen.exp,trial.regimen.ctrl,trial.conclusion,trial.importance].join(" ").toLowerCase();
+      card.dataset.stage=trial.stage;
+      card.dataset.search=[trial.name,trial.inclusion,trial.regimen.exp,trial.regimen.ctrl,trial.conclusion,trial.importance].join(" ").toLowerCase();
       const chipsHtml=trial.chips.map(c=>`<span class="chip ${c.c}">${c.t}</span>`).join("");
       const outHtml=trial.outcomes.map(o=>`<div class="outcome-row"><span class="out-label">${o.l}</span><span class="out-val ${o.t}">${o.v}</span></div>`).join("");
-    let imageHtml = "";
-      if (trial.image) {
-        imageHtml = `
-          <div class="section" style="padding: 10px 14px; text-align: center;">
-            <img src="${trial.image}" alt="${trial.name} 圖表" style="width:100%; max-width:100%; border-radius:8px; display:block; border:1px solid var(--border2); margin: 0 auto;">
-          </div>
-        `;
-      }
       card.innerHTML=`
         <div class="card-head" onclick="toggle('B${idx}${cls}','C${idx}${cls}')">
           <div class="stage-bar bar-${cls}"></div>
@@ -546,7 +537,6 @@ function buildCards(){
             <div class="sec-label"><span class="sec-label-dot" style="background:#EF4444"></span>排除條件 Exclusion</div>
             <div class="sec-text">${trial.exclusion}</div>
           </div>
-       
           <div class="section">
             <div class="sec-label"><span class="sec-label-dot" style="background:#F59E0B"></span>治療方案 Regimen</div>
             <div class="regimen-box">
