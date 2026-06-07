@@ -538,11 +538,7 @@ function buildCards(){
             <div class="sec-label"><span class="sec-label-dot" style="background:#EF4444"></span>排除條件 Exclusion</div>
             <div class="sec-text">${trial.exclusion}</div>
           </div>
-          ${trial.image ? `
-          <div class="section" style="padding: 10px 14px;">
-            <img src="${trial.image}" alt="${trial.name} 圖表" style="width:100%; max-width:100%; border-radius:8px; display:block; border:1px solid var(--border2);">
-          </div>
-          ` : ''}
+       
           <div class="section">
             <div class="sec-label"><span class="sec-label-dot" style="background:#F59E0B"></span>治療方案 Regimen</div>
             <div class="regimen-box">
