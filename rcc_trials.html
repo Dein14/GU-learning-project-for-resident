@@ -346,7 +346,10 @@ button{cursor:pointer;background:none;border:none;font-family:inherit;color:inhe
   letter-spacing:.5px;transition:color .18s;
 }
 .bnav-btn.on{color:var(--sky);}
-.bnav-icon{font-size:17px;line-height:1;}
+.bnav-icon{
+  font-size:12px;font-weight:700;line-height:1;
+  font-family:"JetBrains Mono",monospace;
+}
 
 /* ═══════ LEGEND ═══════ */
 .legend{background:var(--card);border:1px solid var(--line);border-radius:var(--radius);padding:12px;margin-bottom:14px;}
@@ -579,6 +582,18 @@ body{background:var(--bg);}
 }
 .csp-toggle-bar:hover{color:var(--sky);background:rgba(2,132,199,.06);}
 
+
+/* ── Section number pill ── */
+.sdiv-num{
+  display:inline-flex;align-items:center;justify-content:center;
+  min-width:20px;height:20px;border-radius:10px;padding:0 5px;
+  border:1.5px solid currentColor;
+  font-size:9px;font-weight:700;margin-right:7px;
+  font-family:"JetBrains Mono",monospace;flex-shrink:0;
+  line-height:1;
+}
+.sdiv-text{display:inline-flex;align-items:center;white-space:nowrap;}
+
 </style>
 </head>
 <body>
@@ -596,8 +611,8 @@ body{background:var(--bg);}
     <span class="search-icon">⌕</span>
   </div>
   <div class="chips" id="chips">
-    <button class="chip on"  data-filter="ALL">All (30)</button>
-    <button class="chip" data-filter="adjuvant">Adjuvant / Periop. (6)</button>
+    <button class="chip on"  data-filter="ALL">All (31)</button>
+    <button class="chip" data-filter="adjuvant">Adjuvant / Periop. (7)</button>
     <button class="chip" data-filter="firstline">1st-line mRCC (18)</button>
     <button class="chip" data-filter="salvage">Later-line (6)</button>
     <button class="chip" data-filter="nonccRCC">Papillary / nccRCC (10)</button>
@@ -616,7 +631,7 @@ body{background:var(--bg);}
 <main class="main">
   <div class="no-result" id="noResult">No matching trials found</div>
   <div class="stat-strip">
-    <div class="stat-box"><div class="stat-n">30</div><div class="stat-l">Trials</div></div>
+    <div class="stat-box"><div class="stat-n">31</div><div class="stat-l">Trials</div></div>
     <div class="stat-box"><div class="stat-n">18</div><div class="stat-l">Ph III</div></div>
     <div class="stat-box"><div class="stat-n">4</div><div class="stat-l">Categories</div></div>
     <div class="stat-box"><div class="stat-n">2025</div><div class="stat-l">Updated</div></div>
@@ -625,7 +640,7 @@ body{background:var(--bg);}
 
 
 
-<div class="sdiv"><span class="sdiv-text" style="color:var(--violet)">⭐ Adjuvant / Perioperative RCC</span></div>
+<div class="sdiv"><span class="sdiv-text" style="color:var(--violet)"><span class="sdiv-num">01</span>Adjuvant / Perioperative RCC</span></div>
 <div class="tc" data-tags="adjuvant nmRCC IO pembrolizumab soc" data-cat="adjuvant" data-section-idx="0" style="animation-delay:0.00s">
 <div class="tc-stripe"></div>
 <div class="tc-hdr">
@@ -1083,8 +1098,95 @@ body{background:var(--bg);}
 
 
 
-<div class="sdiv"><span class="sdiv-text" style="color:var(--violet)">⚖ Adjuvant Comparison: KN-564 · IMmotion010 · LS-022 · PROSPER</span></div>
+<div class="sdiv"><span class="sdiv-text" style="color:var(--violet)"><span class="sdiv-num">⚖</span>Adjuvant IO Comparison</span></div>
 </div>
+<div class="tc" data-tags="adjuvant nmRCC TKI sunitinib" data-cat="adjuvant" style="animation-delay:0.18s">
+<div class="tc-stripe"></div>
+<div class="tc-hdr">
+  <div class="tc-row1">
+    <div class="tc-name">S-TRAC</div>
+    <div class="tc-phase">Ph. III</div>
+  </div>
+  <div class="tags">
+    <span class="tag tag-t">Adjuvant/Periop.</span>
+    <span class="tag tag-t">TKI</span>
+    <span class="tag tag-y">2016</span>
+    <span class="res-badge res-neg">DFS only / OS NS</span>
+  </div>
+  <div class="tc-brief">Sunitinib vs. Placebo adjuvant after nephrectomy — DFS HR 0.76 ✓ but OS HR 1.01 NS; only TKI adjuvant to reach DFS endpoint; high toxicity, 44% dose reduction</div>
+</div>
+<button class="tc-toggle"><i class="tc-arrow">▾</i><span>Show details</span></button>
+<div class="tc-body">
+<div class="tc-inner">
+
+<div class="ds">
+<div class="ds-title">Study Population</div>
+<div class="kv"><div class="kv-k">Setting</div><div class="kv-v">High-risk locoregional ccRCC, post-nephrectomy adjuvant</div></div>
+<div class="kv"><div class="kv-k">Histology</div><div class="kv-v">Clear cell RCC (ccRCC)</div></div>
+<div class="kv"><div class="kv-k">Risk / Population</div><div class="kv-v">UCLA ISUP high-risk: pT3 G3/4, pT4, or N1 — excludes low-grade pT3a (vs KN-564 which accepts any grade pT3)</div></div>
+</div>
+
+<div class="ds">
+<div class="ds-title">Inclusion Criteria</div>
+<div class="crit-list">
+<div class="crit inc"><div class="crit-dot"></div>Radical nephrectomy (R0) within 3–12 weeks prior</div>
+<div class="crit inc"><div class="crit-dot"></div>ccRCC with UCLA ISUP high-risk features (pT3 G3/4, pT4, or N1)</div>
+<div class="crit inc"><div class="crit-dot"></div>ECOG PS 0–1</div>
+<div class="crit inc"><div class="crit-dot"></div>No distant metastases (M0)</div>
+</div>
+</div>
+<div class="ds">
+<div class="ds-title">Exclusion Criteria</div>
+<div class="crit-list">
+<div class="crit exc"><div class="crit-dot"></div>Prior systemic therapy for RCC</div>
+<div class="crit exc"><div class="crit-dot"></div>Non-ccRCC histology</div>
+<div class="crit exc"><div class="crit-dot"></div>Uncontrolled hypertension or thyroid disease</div>
+</div>
+</div>
+
+<div class="ds">
+<div class="ds-title">Treatment Arms</div>
+<div style="overflow-x:auto;margin-top:4px">
+<table class="arm-tbl">
+<tr><th>Arm</th><th>Drug</th><th>Dose</th><th>Schedule</th></tr>
+<tr class="arm-exp"><td>Experimental</td><td><strong>Sunitinib</strong></td><td>50mg QD PO</td><td>4-on/2-off schedule, 1 year</td></tr>
+<tr class="arm-ctrl"><td>Control</td><td><strong>Placebo</strong></td><td>—</td><td>4-on/2-off schedule, 1 year</td></tr>
+</table></div></div>
+
+<div class="ds">
+<div class="ds-title">Efficacy Outcomes</div>
+<div class="oc-grid">
+<div class="oc-box"><div class="oc-lbl">DFS HR (primary endpoint)</div><div class="oc-val">0.76</div><div class="oc-sub">p=0.03 ✓ — mDFS 6.8 yr vs 5.6 yr (Placebo)</div></div>
+<div class="oc-box"><div class="oc-lbl">OS HR</div><div class="oc-val neg">1.01</div><div class="oc-sub">p=0.94 NS — no OS benefit (median follow-up ~8 yr)</div></div>
+<div class="oc-box"><div class="oc-lbl">5-yr DFS rate</div><div class="oc-val sky">59.3%</div><div class="oc-sub">vs 51.3% (Placebo)</div></div>
+<div class="oc-box"><div class="oc-lbl">Dose reduction rate</div><div class="oc-val warn">44%</div><div class="oc-sub">High toxicity burden — 44% required dose reduction</div></div>
+<div class="oc-box full"><div class="oc-lbl">Context vs other TKI adjuvant trials</div><div class="oc-val sky">Only positive TKI adjuvant trial</div><div class="oc-sub">ASSURE (Suni/Sora) ✗, ATLAS (Axitinib) ✗, PROTECT (Pazo) ✗ — S-TRAC is the only TKI adjuvant trial to meet its primary endpoint (DFS), but OS remains neutral</div></div>
+</div></div>
+
+<div class="ds">
+<div class="ds-title">Key Adverse Events</div>
+<div class="ae-list">
+<div class="ae-row"><span class="ae-name">Fatigue G3+</span><div class="ae-bar-bg"><div class="ae-bar-fill" style="width:17%"></div></div><span class="ae-pct">17%</span></div>
+<div class="ae-row"><span class="ae-name">Hypertension G3+</span><div class="ae-bar-bg"><div class="ae-bar-fill" style="width:16%"></div></div><span class="ae-pct">16%</span></div>
+<div class="ae-row"><span class="ae-name">Hand-foot syndrome G3+</span><div class="ae-bar-bg"><div class="ae-bar-fill" style="width:16%"></div></div><span class="ae-pct">16%</span></div>
+<div class="ae-row"><span class="ae-name">Diarrhea G3+</span><div class="ae-bar-bg"><div class="ae-bar-fill" style="width:12%"></div></div><span class="ae-pct">12%</span></div>
+<div class="ae-row"><span class="ae-name">Dose reduction</span><div class="ae-bar-bg"><div class="ae-bar-fill" style="width:44%"></div></div><span class="ae-pct">44%</span></div>
+</div>
+<div class="ae-warn">⚠️ Very high toxicity burden: 44% required dose reductions and 28% discontinued early due to AEs. Grade 3+ AE rate ~62% overall. QoL significantly impaired during treatment. This toxicity profile, combined with no OS benefit, severely limits clinical utility.</div>
+</div>
+
+<div class="ds">
+<div class="ds-title">Summary</div>
+<div class="sum-box">
+<p>For <span class="hl">post-nephrectomy high-risk ccRCC (UCLA ISUP high-risk: pT3 G3/4, pT4, N1)</span>, S-TRAC shows <span class="at">Sunitinib 1-year adjuvant</span> achieves <span class="hl">DFS benefit (HR 0.76, mDFS 6.8 vs 5.6 yr) ✓</span> but <span class="rt">no OS benefit (HR 1.01, NS)</span> — the classic "DFS without OS" result.</p>
+<p>High toxicity (44% dose reduction, 28% early discontinuation) and no OS benefit severely limit clinical value. <span class="wt">FDA approved but EMA rejected</span> — reflecting this controversy. Essentially superseded by KEYNOTE-564 (Pembrolizumab, both DFS + OS ✓).</p>
+</div>
+<div class="sig-box">
+<div class="sig-label">📌 Significance / Evidence Context</div>
+<p>S-TRAC is the <b>only TKI adjuvant RCC trial to meet its primary endpoint</b> (DFS HR 0.76), while ASSURE (Sunitinib/Sorafenib), ATLAS (Axitinib), and PROTECT (Pazopanib) were all negative. However, the <b>lack of OS benefit (HR 1.01)</b> and severe toxicity burden (44% dose reduction) substantially limit its clinical role. FDA approved in 2017 but EMA rejected. Now largely <b>superseded by KEYNOTE-564</b> (Pembrolizumab achieving both DFS HR 0.72 and OS HR 0.62), though S-TRAC established that adjuvant TKI can improve DFS — which set the stage for ICI adjuvant trials. Also notable: S-TRAC's strict UCLA ISUP risk criteria (pT3 G3/4 only — excludes low-grade pT3a) defined a higher-risk population than KN-564, yet still no OS benefit from TKI.</p>
+</div></div>
+
+</div></div></div>
 <div class="cmp-spotlight" data-tags="adjuvant" data-cat="adjuvant">
   <div class="csp-header" onclick="toggleCmp()" style="cursor:pointer">
     <div class="csp-icon">⚖️</div>
@@ -1264,7 +1366,7 @@ body{background:var(--bg);}
   </div>
 </div>
 
-<div class="sdiv"><span class="sdiv-text" style="color:var(--sky)">⭐ 1st-line Metastatic ccRCC</span></div>
+<div class="sdiv"><span class="sdiv-text" style="color:var(--sky)"><span class="sdiv-num">02</span>1st-line Metastatic ccRCC</span></div>
 <div class="tc" data-tags="firstline mRCC IO doubleIO nivolumab ipilimumab soc poorRisk" data-cat="firstline" data-section-idx="0" style="animation-delay:0.18s">
 <div class="tc-stripe"></div>
 <div class="tc-hdr">
@@ -1800,7 +1902,7 @@ body{background:var(--bg);}
 
 
 
-<div class="sdiv"><span class="sdiv-text" style="color:var(--amber)">⭐ IO Rechallenge / Later-line ccRCC</span></div>
+<div class="sdiv"><span class="sdiv-text" style="color:var(--amber)"><span class="sdiv-num">03</span>IO Rechallenge / Later-line ccRCC</span></div>
 <div class="tc" data-tags="salvage mRCC HIF2a belzutifan postIO postTKI everolimus soc" data-cat="salvage" data-section-idx="0" style="animation-delay:0.39s">
 <div class="tc-stripe"></div>
 <div class="tc-hdr">
@@ -2307,7 +2409,7 @@ body{background:var(--bg);}
 
 
 
-<div class="sdiv"><span class="sdiv-text" style="color:var(--teal)">⭐ Papillary / Non-clear Cell RCC</span></div>
+<div class="sdiv"><span class="sdiv-text" style="color:var(--teal)"><span class="sdiv-num">04</span>Papillary / Non-clear Cell RCC</span></div>
 <div class="tc" data-tags="firstline nonccRCC mTOR TKI everolimus sunitinib nccRCC papillary chromophobe" data-cat="special" data-section-idx="0" style="animation-delay:0.60s">
 <div class="tc-stripe"></div>
 <div class="tc-hdr">
@@ -3035,11 +3137,11 @@ body{background:var(--bg);}
 </main>
 
 <nav class="bnav">
-  <button class="bnav-btn on" id="nb-all" onclick="setFilter('ALL')"><span class="bnav-icon">⭐</span><span>All</span></button>
-  <button class="bnav-btn" id="nb-3" onclick="setFilter('adjuvant')"><span class="bnav-icon">⭐</span><span>Adj.</span></button>
-  <button class="bnav-btn" id="nb-1" onclick="setFilter('firstline')"><span class="bnav-icon">⭐</span><span>1L</span></button>
-  <button class="bnav-btn" id="nb-2" onclick="setFilter('salvage')"><span class="bnav-icon">⭐</span><span>Later</span></button>
-  <button class="bnav-btn" id="nb-5" onclick="setFilter('nonccRCC')"><span class="bnav-icon">⭐</span><span>nccRCC</span></button>
+  <button class="bnav-btn on" id="nb-all" onclick="setFilter('ALL')"><span class="bnav-icon">◎</span><span>All</span></button>
+  <button class="bnav-btn" id="nb-3" onclick="setFilter('adjuvant')"><span class="bnav-icon">01</span><span>Adj.</span></button>
+  <button class="bnav-btn" id="nb-1" onclick="setFilter('firstline')"><span class="bnav-icon">02</span><span>1L</span></button>
+  <button class="bnav-btn" id="nb-2" onclick="setFilter('salvage')"><span class="bnav-icon">03</span><span>Later</span></button>
+  <button class="bnav-btn" id="nb-5" onclick="setFilter('nonccRCC')"><span class="bnav-icon">04</span><span>nccRCC</span></button>
 </nav>
 
 <script>
