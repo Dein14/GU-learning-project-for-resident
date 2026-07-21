@@ -1,98 +1,242 @@
 <!DOCTYPE html>
-<html>
+<html lang="zh-Hant">
 <head>
 <link rel="apple-touch-icon" href="IMG_1194.jpeg">
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>文獻與數據清單</title>
 <style>
-    body {
-        font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
-        background-color: #f8f9fa;
-        padding: 20px;
-        max-width: 800px;
-        margin: 0 auto;
+    :root {
+        --nejm-red: #B31B1B;
+        --ink: #1a1a1a;
+        --ink-soft: #4a4a4a;
+        --rule: #d8d4cc;
+        --paper: #f7f1e3;
+        --c-prostate: #B31B1B;
+        --c-rcc: #2B5D6B;
+        --c-uc: #A6741C;
     }
 
-    h1 { color: #343a40; text-align: center; margin-bottom: 25px; }
+    * { box-sizing: border-box; }
+
+    body {
+        font-family: Georgia, "Noto Serif TC", "PT Serif", serif;
+        background-color: var(--paper);
+        color: var(--ink);
+        padding: 0;
+        margin: 0;
+    }
+
+    .masthead {
+        max-width: 720px;
+        margin: 0 auto;
+        padding: 48px 24px 0;
+    }
+
+    .kicker {
+        font-family: Georgia, "Noto Serif TC", serif;
+        font-size: 22px;
+        font-weight: 700;
+        letter-spacing: 0.02em;
+        color: var(--ink);
+        text-align: center;
+        margin: 0 0 8px;
+    }
+
+    .issue-line {
+        font-family: "Helvetica Neue", Arial, sans-serif;
+        font-size: 12px;
+        color: var(--ink-soft);
+        text-align: center;
+        margin: 0 0 20px;
+    }
+
+    .double-rule {
+        border: none;
+        border-top: 3px solid var(--nejm-red);
+        border-bottom: 1px solid var(--nejm-red);
+        height: 4px;
+        margin: 0 0 28px;
+    }
+
+    .container {
+        max-width: 720px;
+        margin: 0 auto;
+        padding: 0 24px 60px;
+    }
 
     #search {
-        padding: 12px; width: 100%; box-sizing: border-box;
-        border: 2px solid #e9ecef; border-radius: 25px; /* 膠囊狀搜尋欄 */
-        font-size: 16px; margin-bottom: 25px; text-align: center;
-        outline: none; transition: 0.3s;
+        padding: 11px 18px;
+        width: 100%;
+        font-family: "Helvetica Neue", Arial, sans-serif;
+        border: 1px solid var(--rule);
+        border-radius: 2px;
+        background: #fff;
+        font-size: 14px;
+        margin-bottom: 36px;
+        outline: none;
+        color: var(--ink);
+        transition: border-color 0.2s;
     }
-    #search:focus { border-color: #495057; }
+    #search::placeholder { color: #999; }
+    #search:focus { border-color: var(--nejm-red); }
 
-    #list { list-style: none; padding: 0; }
-    #list li { margin-bottom: 20px; }
+    #list {
+        list-style: none;
+        padding: 0;
+        margin: 0;
+        display: grid;
+        gap: 16px;
+    }
 
-    /* 底圖卡片設定 */
+    #list li { margin: 0; }
+
     #list a {
-        display: block;
-        height: 100px; /* 給卡片一個高度 */
-        padding: 20px;
-        box-sizing: border-box;
-        border-radius: 12px;
-        color: white; /* 圖片上的字體改為白色 */
-        text-decoration: none;
-        font-size: 18px;
-        font-weight: bold;
-        text-shadow: 1px 1px 5px rgba(0,0,0,0.7); /* 幫文字加陰影，防止被背景圖吃掉 */
-        
-        /* 預設背景圖（使用 Unsplash 醫學/科技感的漸層縮圖） */
-        background-image: linear-gradient(rgba(0,0,0,0.3), rgba(0,0,0,0.3)), url('https://images.unsplash.com/photo-1507668077129-56e32842fceb?w=800&auto=format&fit=crop&q=60');
-        background-size: cover;
-        background-position: center;
-        
+        --accent: var(--nejm-red);
         display: flex;
-        align-items: center; /* 讓文字在卡片中垂直居中 */
-        transition: transform 0.3s, box-shadow 0.3s;
+        align-items: center;
+        gap: 18px;
+        background: #fff;
+        border: 1px solid var(--rule);
+        border-left: 6px solid var(--accent);
+        border-radius: 4px;
+        padding: 20px 22px;
+        text-decoration: none;
+        color: var(--ink);
+        box-shadow: 0 1px 2px rgba(0,0,0,0.04);
+        transition: transform 0.15s ease, box-shadow 0.15s ease, border-color 0.15s ease;
     }
 
-    /* 懸停效果 */
     #list a:hover {
-        transform: scale(1.02); /* 卡片微微放大 */
-        box-shadow: 0 8px 20px rgba(0,0,0,0.15);
+        transform: translateY(-2px);
+        box-shadow: 0 10px 22px rgba(0,0,0,0.1);
+        border-left-color: var(--accent);
     }
 
-    /* 💡 進階：如果你想讓不同的卡片有不同的底圖，可以像下面這樣個別指定背景 */
-    .bg-prostate {
-        background-image: linear-gradient(rgba(0,0,0,0.4), rgba(0,0,0,0.4)), url('https://images.unsplash.com/photo-1457369804613-52c61a468e7d?w=800&auto=format&fit=crop&q=60') !important;
-    }
-    /* ==========================================
-   手機版自適應微調 (螢幕寬度 600px 以下生效)
-   ========================================== */
-@media (max-width: 600px) {
-    body {
-        padding: 12px; /* 縮小手機版網頁左右留白，留給內容更多空間 */
+    #list a:active {
+        transform: translateY(0px);
+        box-shadow: 0 3px 8px rgba(0,0,0,0.08);
     }
 
-    h1 {
-        font-size: 24px; /* 稍微縮小手機版的大標題，避免折行太難看 */
+    .entry-badge {
+        flex: 0 0 auto;
+        width: 52px;
+        height: 52px;
+        border-radius: 50%;
+        border: 2px solid var(--accent);
+        color: var(--accent);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-family: Georgia, "Noto Serif TC", serif;
+        font-weight: 700;
+        font-size: 13px;
+        letter-spacing: 0.02em;
     }
 
-    /* 調整底圖字卡在手機上的表現 */
-    #list a.card-bg {
-        height: 90px;      /* 稍微縮短手機版的字卡高度，看起來更精緻 */
-        padding: 15px;     /* 縮小內襯 */
-        font-size: 16px;   /* 微調字卡內的字體大小 */
+    .entry-body {
+        flex: 1 1 auto;
+        display: flex;
+        flex-direction: column;
+        gap: 2px;
+        min-width: 0;
     }
-}
+
+    .entry-tag {
+        font-family: "Helvetica Neue", Arial, sans-serif;
+        font-size: 10.5px;
+        letter-spacing: 0.12em;
+        text-transform: uppercase;
+        color: var(--accent);
+        font-weight: 600;
+    }
+
+    .entry-title {
+        font-size: 19px;
+        font-weight: 700;
+        line-height: 1.3;
+    }
+
+    .entry-arrow {
+        flex: 0 0 auto;
+        font-size: 20px;
+        color: var(--accent);
+        opacity: 0.55;
+        transition: transform 0.15s ease, opacity 0.15s ease;
+    }
+
+    #list a:hover .entry-arrow {
+        transform: translateX(4px);
+        opacity: 1;
+    }
+
+    footer {
+        max-width: 720px;
+        margin: 0 auto;
+        padding: 24px 24px 40px;
+        text-align: center;
+        font-family: "Helvetica Neue", Arial, sans-serif;
+        font-size: 11px;
+        color: #999;
+        border-top: 1px solid var(--rule);
+        line-height: 1.8;
+    }
+
+    @media (max-width: 600px) {
+        .masthead { padding: 32px 18px 0; }
+        .container { padding: 0 18px 40px; }
+        .entry-title { font-size: 17px; }
+        #list a { padding: 16px; gap: 14px; }
+        .entry-badge { width: 44px; height: 44px; font-size: 11px; }
+        .entry-arrow { display: none; }
+    }
 </style>
 </head>
-
 <body>
 
-<h1>📂 機智GU住院醫師</h1>
+<div class="masthead">
+    <p class="kicker">機智 GU 住院醫師</p>
+    <p class="issue-line">Genitourinary Oncology — Trial Reference Index</p>
+    <hr class="double-rule">
+</div>
 
-<input id="search" placeholder="🔍 輸入關鍵字篩選報告...">
+<div class="container">
+    <input id="search" placeholder="輸入關鍵字篩選報告…">
+    <ul id="list">
+        <li>
+            <a href="prostate_cancer_clinical_trials.html" style="--accent: var(--c-prostate);">
+                <span class="entry-badge">CaP</span>
+                <span class="entry-body">
+                    <span class="entry-tag">Clinical Trials</span>
+                    <span class="entry-title">攝護腺癌</span>
+                </span>
+                <span class="entry-arrow">→</span>
+            </a>
+        </li>
+        <li>
+            <a href="rcc_trials.html" style="--accent: var(--c-rcc);">
+                <span class="entry-badge">RCC</span>
+                <span class="entry-body">
+                    <span class="entry-tag">Clinical Trials</span>
+                    <span class="entry-title">腎細胞癌</span>
+                </span>
+                <span class="entry-arrow">→</span>
+            </a>
+        </li>
+        <li>
+            <a href="uc_trial_速查.html" style="--accent: var(--c-uc);">
+                <span class="entry-badge">UC</span>
+                <span class="entry-body">
+                    <span class="entry-tag">Clinical Trials</span>
+                    <span class="entry-title">泌尿上皮癌</span>
+                </span>
+                <span class="entry-arrow">→</span>
+            </a>
+        </li>
+    </ul>
+</div>
 
-<ul id="list">
-    <li><a href="prostate_cancer_clinical_trials.html" class="bg-prostate">📊 CaP臨床試驗</a></li>
-    <li><a href="rcc_trials.html" class="bg-prostate">📊 RCC臨床試驗</a></li>
-    <li><a href="uc_trial_速查.html" class="bg-prostate">📊 UC臨床試驗</a></li>
-</ul>
+<footer>Internal reference only · Not for clinical decision-making without primary source verification<br>Maintained by Y.T. Huang</footer>
 
 <script>
 let input = document.getElementById("search");
@@ -104,6 +248,5 @@ input.addEventListener("keyup", function(){
     });
 });
 </script>
-
 </body>
 </html>
