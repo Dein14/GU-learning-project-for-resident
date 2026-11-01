@@ -1,0 +1,717 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>GU Trial Quest｜泌尿腫瘤試驗闖關</title>
+<link href="https://fonts.googleapis.com/css2?family=Nunito:wght@700;800;900&family=Noto+Sans+TC:wght@400;500;700;900&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#f3f6ff; --bg2:#eef2ff; --panel:#ffffff; --ink:#1d2342; --muted:#6a7396; --line:#e2e8f8;
+  --px:#f59e0b; --pink:#ec4899; --cyan:#3b82f6; --green:#10b981; --red:#ef4444; --purple:#6366f1;
+  --pf:'Nunito','Noto Sans TC',sans-serif; --tf:'Noto Sans TC','Nunito',-apple-system,'PingFang TC','Microsoft JhengHei',sans-serif;
+  --shadow:0 8px 24px rgba(60,80,160,.12),0 2px 6px rgba(60,80,160,.08);
+}
+*{box-sizing:border-box}
+html,body{margin:0;min-height:100%}
+body{
+  color:var(--ink); font-family:var(--tf); font-size:16px; -webkit-font-smoothing:antialiased; overflow-x:hidden;
+  background:
+    radial-gradient(600px 400px at 0% 0%,rgba(99,102,241,.16),transparent 70%),
+    radial-gradient(500px 400px at 100% 10%,rgba(236,72,153,.13),transparent 70%),
+    radial-gradient(600px 500px at 50% 100%,rgba(16,185,129,.12),transparent 70%),
+    var(--bg);
+  background-attachment:fixed;
+}
+button{font-family:inherit;color:inherit;cursor:pointer}
+#app{max-width:680px;margin:0 auto;padding:20px 16px 60px;position:relative}
+.screen{display:none;animation:pop .35s ease}
+.screen.on{display:block}
+@keyframes pop{from{opacity:0;transform:translateY(14px)}to{opacity:1;transform:none}}
+.px{font-family:var(--pf);font-weight:800}
+.box{background:var(--panel);border:1px solid var(--line);border-radius:22px;box-shadow:var(--shadow);padding:18px}
+.btn{
+  display:inline-block;border:none;border-radius:999px;padding:13px 24px;font-family:var(--pf);font-weight:800;font-size:15px;color:#fff;
+  background:linear-gradient(135deg,#6366f1,#3b82f6);box-shadow:0 6px 16px rgba(79,102,241,.35);transition:transform .12s,box-shadow .12s;line-height:1.3
+}
+.btn:hover{transform:translateY(-2px);box-shadow:0 10px 20px rgba(79,102,241,.4)}
+.btn:active{transform:translateY(1px)}
+.btn.alt{background:linear-gradient(135deg,#10b981,#06b6d4);box-shadow:0 6px 16px rgba(16,185,129,.35)}
+.btn.pink{background:linear-gradient(135deg,#ec4899,#f97316)}
+.btn:focus-visible,.stage:focus-visible,.opt:focus-visible{outline:3px solid rgba(99,102,241,.5);outline-offset:3px}
+
+/* TITLE */
+.hero{text-align:center;padding:22px 0 6px}
+.logo{font-family:var(--pf);font-weight:900;font-size:40px;line-height:1.15;margin:8px 0;letter-spacing:.01em;
+  background:linear-gradient(135deg,#6366f1,#ec4899 60%,#f59e0b);-webkit-background-clip:text;background-clip:text;color:transparent}
+.logo span{background:none;-webkit-text-fill-color:initial;color:inherit}
+.sub{color:var(--muted);font-size:14px;margin:10px 0 0}
+.blink{font-family:var(--pf);font-weight:800;font-size:12px;color:var(--purple);letter-spacing:.12em;animation:fade 1.6s ease-in-out infinite}
+@keyframes fade{50%{opacity:.45}}
+.sprites{font-size:38px;margin:10px 0 2px;display:flex;justify-content:center;gap:16px}
+.sprites span{animation:bob 1.6s ease-in-out infinite;display:inline-block}
+.sprites span:nth-child(2){animation-delay:.25s}.sprites span:nth-child(3){animation-delay:.5s}
+@keyframes bob{50%{transform:translateY(-9px)}}
+.stages{display:flex;flex-direction:column;gap:14px;margin-top:18px}
+.stage{
+  display:flex;align-items:center;gap:14px;text-align:left;width:100%;padding:16px;background:var(--panel);
+  border:1px solid var(--line);border-radius:22px;box-shadow:var(--shadow);transition:transform .15s,box-shadow .15s
+}
+.stage:hover{transform:translateY(-3px);box-shadow:0 14px 30px rgba(60,80,160,.18)}
+.stage:active{transform:translateY(1px)}
+.stage .ico{font-size:32px;width:64px;height:64px;border-radius:18px;display:flex;align-items:center;justify-content:center;flex-shrink:0;box-shadow:inset 0 -4px 0 rgba(0,0,0,.12)}
+.stage .nm{font-family:var(--pf);font-weight:900;font-size:15px;line-height:1.4}
+.stage .ds{font-size:13px;color:var(--muted);margin-top:3px;line-height:1.5}
+.stage .tag{font-family:var(--pf);font-weight:900;font-size:12px;margin-left:auto;color:#fff;background:var(--purple);padding:6px 12px;border-radius:999px;white-space:nowrap}
+.stage .best{display:inline-block;font-family:var(--pf);font-weight:800;font-size:12px;color:#b45309;background:#fef3c7;padding:2px 10px;border-radius:999px;margin-top:7px}
+.rules{margin-top:6px;font-size:13.5px;color:var(--muted);line-height:1.85}
+.rules b{color:var(--purple)}
+.mute{position:fixed;top:12px;right:12px;z-index:100;font-size:18px;background:#fff;border:1px solid var(--line);border-radius:50%;width:42px;height:42px;box-shadow:var(--shadow)}
+
+/* QUIZ */
+.hud{display:flex;align-items:center;justify-content:space-between;gap:10px;font-family:var(--pf);font-weight:900;font-size:13px;margin-bottom:10px}
+.hud .stg{padding:5px 12px;border-radius:999px;background:#fff;border:1px solid var(--line);letter-spacing:.04em}
+.hud .sc{color:var(--purple)}
+.bar{height:14px;background:#e4e9fb;border-radius:999px;overflow:hidden}
+.bar i{display:block;height:100%;border-radius:999px;background:linear-gradient(90deg,#6366f1,#ec4899);transition:width .4s}
+.dots{display:flex;gap:6px;margin:12px 0 14px;justify-content:center;flex-wrap:wrap}
+.dots b{width:22px;height:8px;border-radius:999px;background:#d9e0f7;display:block}
+.dots b.done{background:var(--purple)} .dots b.cur{background:var(--pink);width:34px}
+.qtype{display:inline-block;font-family:var(--pf);font-weight:800;font-size:12px;background:#ede9fe;color:#5b21b6;border-radius:999px;padding:4px 12px;margin-bottom:10px}
+.qtext{font-size:18px;font-weight:700;line-height:1.65;margin:0 0 14px;overflow-wrap:anywhere}
+.opts{display:flex;flex-direction:column;gap:11px}
+.opt{
+  display:flex;align-items:flex-start;gap:12px;text-align:left;width:100%;padding:13px 14px;background:#fff;border:2px solid var(--line);border-radius:16px;
+  font-size:15px;line-height:1.55;transition:transform .12s,border-color .12s,background .12s,box-shadow .12s;overflow-wrap:anywhere
+}
+.opt:hover{border-color:#a5b4fc;background:#f5f6ff;transform:translateY(-1px)}
+.opt .k{font-family:var(--pf);font-weight:900;font-size:13px;background:#eef0ff;color:var(--purple);border-radius:10px;min-width:30px;height:30px;display:flex;align-items:center;justify-content:center;flex-shrink:0}
+.opt.pick{border-color:var(--purple);background:#eef0ff;box-shadow:0 0 0 4px rgba(99,102,241,.18)}
+.opt.pick .k{background:var(--purple);color:#fff}
+.opt.lock{pointer-events:none}
+.lockmsg{font-family:var(--pf);font-weight:800;font-size:13px;color:var(--green);text-align:center;margin-top:14px;min-height:18px}
+.quit{margin-top:22px;text-align:center}
+.quit button{background:none;border:none;color:var(--muted);font-size:13px;text-decoration:underline;padding:8px}
+
+/* RESULT */
+.rank-wrap{text-align:center;padding:22px 18px}
+.rank{font-family:var(--pf);font-weight:900;font-size:92px;line-height:1;margin:4px 0;-webkit-background-clip:text;background-clip:text;color:transparent}
+.rank.S{background-image:linear-gradient(135deg,#f59e0b,#ef4444)} .rank.A{background-image:linear-gradient(135deg,#10b981,#06b6d4)}
+.rank.B{background-image:linear-gradient(135deg,#3b82f6,#6366f1)} .rank.C{background-image:linear-gradient(135deg,#ec4899,#f97316)}
+.title-r{font-family:var(--pf);font-weight:800;font-size:15px;line-height:1.7}
+.big{font-family:var(--pf);font-weight:900;font-size:44px;color:var(--purple);margin:10px 0 0}
+.big small{font-size:16px;color:var(--muted)}
+.stars{font-size:32px;letter-spacing:6px;margin:6px 0}
+.stats{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin:16px 0}
+.stats div{background:#f5f7ff;border-radius:16px;padding:12px 4px;text-align:center}
+.stats b{display:block;font-family:var(--pf);font-weight:900;font-size:24px;margin-bottom:2px}
+.stats span{font-size:12px;color:var(--muted)}
+.row-btn{display:flex;flex-wrap:wrap;gap:12px;justify-content:center;margin:16px 0}
+.rv-head{display:flex;align-items:center;justify-content:space-between;gap:10px;margin:26px 0 12px;flex-wrap:wrap}
+.rv-head h2{font-family:var(--pf);font-weight:900;font-size:18px;margin:0}
+.tgl{font-size:13px;display:flex;align-items:center;gap:8px;color:var(--muted)}
+.rv{margin-bottom:14px;border-left:8px solid var(--green)}
+.rv.bad{border-left-color:var(--red)}
+.rv .rt{display:flex;gap:8px;align-items:center;font-family:var(--pf);font-weight:800;font-size:12px;margin-bottom:8px}
+.rv .rt .mk{padding:3px 10px;border-radius:999px;color:#065f46;background:#d1fae5}
+.rv.bad .rt .mk{background:#fee2e2;color:#991b1b}
+.rv .rq{font-weight:700;line-height:1.65;font-size:15.5px;margin:0 0 10px;overflow-wrap:anywhere}
+.rv .ra{font-size:14px;line-height:1.6;margin:5px 0;overflow-wrap:anywhere}
+.rv .ra em{font-style:normal;font-family:var(--pf);font-weight:800;font-size:11px;padding:2px 8px;border-radius:999px;margin-right:6px;vertical-align:1px}
+.rv .you em{background:#fee2e2;color:#991b1b} .rv.ok .you em{background:#d1fae5;color:#065f46} .rv .cor em{background:#d1fae5;color:#065f46}
+.rv .exp{margin-top:10px;background:#f5f7ff;border-radius:14px;padding:11px 14px;font-size:14px;line-height:1.75;color:#33395c}
+.rv .exp b{color:var(--purple)}
+.foot{margin-top:30px;font-size:11.5px;color:var(--muted);line-height:1.7;text-align:center}
+.confetti{position:fixed;top:-12px;width:10px;height:14px;border-radius:3px;z-index:90;pointer-events:none;animation:fall linear forwards}
+@keyframes fall{to{transform:translateY(110vh) rotate(720deg);opacity:.9}}
+@media (prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
+@media(max-width:420px){.logo{font-size:32px}.rank{font-size:74px}.qtext{font-size:17px}.stage .tag{display:none}}
+</style>
+</head>
+<body>
+<button class="mute" id="mute" aria-label="音效開關">🔊</button>
+<div id="app">
+
+  <!-- TITLE / STAGE SELECT -->
+  <section id="s-title" class="screen on">
+    <div class="hero">
+      <div class="sprites"><span>🧬</span><span>💊</span><span>🩺</span></div>
+      <div class="logo">GU TRIAL<br><span>QUEST</span></div>
+      <p class="sub">泌尿腫瘤臨床試驗闖關 ・ 測試你的 Trial 功力</p>
+      <p class="blink">CHOOSE A TOPIC</p>
+    </div>
+    <div class="stages" id="stages"></div>
+    <div class="rules box" style="margin-top:22px">
+      <b class="px" style="font-size:10px;color:var(--px)">HOW TO PLAY</b>
+      <div class="rules" style="margin-top:8px">
+        ・每次從題庫<b>隨機抽 10 題</b>，四選一，答對 <b>+10 分</b>，滿分 100。<br>
+        ・考題涵蓋：試驗名稱、Regimen 劑量與週期、納入／排除族群、試驗設計與結論描述。<br>
+        ・作答中不顯示對錯，<b>全部答完後</b>統一公布得分與逐題詳解。<br>
+        ・可用鍵盤 <b>1–4</b> 或 <b>A–D</b> 快速作答。
+      </div>
+    </div>
+  </section>
+
+  <!-- QUIZ -->
+  <section id="s-quiz" class="screen">
+    <div class="hud"><span class="stg" id="hudStage"></span><span class="sc" id="hudQ"></span></div>
+    <div class="bar"><i id="barFill" style="width:0"></i></div>
+    <div class="dots" id="dots"></div>
+    <div class="box qcard" id="qcard">
+      <span class="qtype" id="qtype"></span>
+      <p class="qtext" id="qtext"></p>
+      <div class="opts" id="opts"></div>
+      <div class="lockmsg" id="lockmsg"></div>
+    </div>
+    <div class="quit"><button id="quitBtn">← 放棄並回到癌別選擇</button></div>
+  </section>
+
+  <!-- RESULT -->
+  <section id="s-result" class="screen">
+    <div class="box rank-wrap">
+      <div class="px" style="font-size:10px;color:var(--cyan)" id="rStage"></div>
+      <div class="rank" id="rRank">A</div>
+      <div class="title-r" id="rTitle"></div>
+      <div class="big"><span id="rScore">0</span><small> / 100</small></div>
+      <div class="stars" id="rStars"></div>
+      <div class="stats">
+        <div><b id="rOk" style="color:var(--green)">0</b><span>答對</span></div>
+        <div><b id="rBad" style="color:var(--red)">0</b><span>答錯</span></div>
+        <div><b id="rBest" style="color:var(--px)">0</b><span>本關最高分</span></div>
+      </div>
+      <div class="row-btn">
+        <button class="btn" id="againBtn">↻ 再挑戰</button>
+        <button class="btn alt" id="menuBtn">☰ 選其他癌別</button>
+      </div>
+    </div>
+    <div class="rv-head">
+      <h2>📖 逐題詳解</h2>
+      <label class="tgl"><input type="checkbox" id="onlyBad"> 只看錯題</label>
+    </div>
+    <div id="review"></div>
+    <div class="row-btn"><button class="btn" id="againBtn2">↻ 再挑戰</button><button class="btn alt" id="menuBtn2">☰ 選其他癌別</button></div>
+  </section>
+
+  <div class="foot">題目內容僅根據 uc／rcc／prostate 三份 Evidence Digest 之資料編寫，僅供學習自我檢測，非取代原始文獻或臨床指引判讀。</div>
+</div>
+
+<script>
+/* 題庫格式：[題型, 題目, 正確答案, [錯誤選項×3], 詳解] */
+const BANK = {
+uc:{ name:"Urothelial Carcinoma", zh:"尿路上皮癌", emoji:"🫘", color:"#6366f1", desc:"圍手術期、第一線、第二線、輔助治療與 UTUC", qs:[
+["試驗","哪個試驗針對「不適合 Cisplatin」的 MIBC，比較圍手術期 EV + Pembrolizumab 與單純 RC + PLND？","EV-303 / KEYNOTE-905",["EV-304 / KEYNOTE-B15","VESPER (GETUG-AFU V05)","CheckMate 274"],"EV-303 收案為 cisplatin-ineligible 的 MIBC；實驗組術前 EV+Pembrolizumab → RC+PLND → 術後 EV+Pembrolizumab，對照組為單純 RC+PLND。"],
+["試驗","EV-304 / KEYNOTE-B15 的對照組是什麼？","術前 Gemcitabine + Cisplatin → RC + PLND → 觀察",["單純 RC + PLND","術前 ddMVAC → RC + PLND","術後 Adjuvant Nivolumab"],"EV-304 收案為適合 Cisplatin 的 MIBC，對照為標準術前 Gem/Cis（4 個療程），之後手術並觀察。"],
+["劑量","EV-302 / KEYNOTE-A39 中 Enfortumab vedotin 的給藥方式為何？","1.25 mg/kg IV，21 天週期之 Day 1 與 Day 8",["1.25 mg/kg IV，28 天週期之 Day 1、8、15","1.25 mg/kg IV，每 3 週僅 Day 1","200 mg IV，每 3 週一次"],"EV-302：EV 1.25 mg/kg，D1 與 D8（21 天週期），併用 Pembrolizumab 200 mg D1（最多 35 個療程）。"],
+["劑量","EV-301 中 Enfortumab vedotin 的給藥方式為何？","1.25 mg/kg IV，28 天週期之 Day 1、8、15",["1.25 mg/kg IV，21 天週期之 Day 1 與 Day 8","5.4 mg/kg IV，每 3 週一次","10 mg/kg IV，21 天週期之 Day 1 與 Day 8"],"EV-301 的 EV 為 28 天週期的 D1、8、15；與 EV-302 的 21 天週期 D1、8 不同，容易混淆。"],
+["週期","EV-303 實驗組 EV 與 Pembrolizumab 的總療程數為何？","EV 共 9 個療程（術前 3＋術後 6）；Pembrolizumab 共 17 個療程（術前 3＋術後 14）",["EV 共 9 個療程（術前 4＋術後 5）；Pembrolizumab 共 17 個療程（術前 4＋術後 13）","EV 與 Pembrolizumab 均僅於術前給 3 個療程","EV 共 6 個療程；Pembrolizumab 共 35 個療程"],"EV-303：術前 3 個療程後接受 RC+PLND，術後 EV 6、Pembrolizumab 14 個療程。"],
+["週期","EV-304 實驗組術前與術後的療程安排為何？","術前 EV + Pembro 4 個療程；術後 EV 5 個、Pembrolizumab 13 個療程",["術前 3 個療程；術後 EV 6 個、Pembrolizumab 14 個療程","術前 6 個療程；術後不再給藥","術前 2 個療程；術後 EV 9 個療程"],"EV-304 術前 4 個療程，術後 EV 5＋Pembrolizumab 13；EV-303 則是術前 3、術後 6／14。"],
+["劑量","VESPER (GETUG-AFU V05) 中 ddMVAC 的給藥頻率與療程數為何？","每 2 週一次（併 G-CSF），共 6 個療程",["每 3 週一次，共 4 個療程","每 4 週一次，共 6 個療程","每週一次，共 12 個療程"],"ddMVAC 為每 2 週一次 + G-CSF 支持，共 6 個療程；對照 GC 為每 3 週一次共 4 個療程。"],
+["結論","VESPER 的正向結果主要來自哪一個群體？","Neoadjuvant（術前）亞群，而非整體 ITT 族群",["Adjuvant（術後）亞群","整體 ITT 皆達顯著，與亞群無關","僅 Cisplatin-ineligible 病人"],"整體 ITT 的 3 年 PFS 未達統計顯著；Neoadjuvant 亞群 PFS 與 5 年 OS 更新才顯示優勢，確立 6 個循環 ddMVAC 為優於 GC 的術前方案。"],
+["劑量","PURE-01 的 Pembrolizumab 術前給藥方式為何？","200 mg IV，每 3 週一次，術前共 3 個療程",["200 mg IV，每 3 週一次，術前共 2 個療程","1200 mg IV，每 3 週一次，術前共 2 個療程","240 mg IV，每 2 週一次，術前共 6 個療程"],"PURE-01 為單臂 Phase 2，Pembrolizumab 200 mg q3w × 3 後接受 RC。"],
+["劑量","ABACUS 的 Atezolizumab 術前給藥方式為何？","1200 mg IV，每 3 週一次，術前共 2 個療程",["200 mg IV，每 3 週一次，術前共 3 個療程","1200 mg IV，每 3 週一次，共 16 個療程","240 mg IV，每 2 週一次，共 1 年"],"ABACUS 為單臂 Phase 2，Atezolizumab 1200 mg q3w × 2 後接受 RC。"],
+["族群","ABACUS 收案的 MIBC 族群特徵為何？","Cisplatin-ineligible 或拒絕接受 cisplatin-based 化療者",["僅限 PD-L1 CPS ≥ 10 者","術後已出現轉移者","曾接受過膀胱癌全身治療者"],"ABACUS 針對無法／不願接受 Cisplatin 的 MIBC；曾接受膀胱癌全身治療者為排除條件。"],
+["試驗","下列哪個高風險 MIUC 術後輔助免疫試驗的 ITT 結果為「負向」，但事後 ctDNA 分析發現 ctDNA 陽性者可能獲益？","IMvigor010",["CheckMate 274","AMBASSADOR","POUT"],"IMvigor010（Atezolizumab vs 觀察）ITT 未達顯著；ctDNA 陽性亞群的探索性分析促成 IMvigor011 的設計。"],
+["劑量","CheckMate 274 的輔助 Nivolumab 劑量與時程為何？","240 mg IV，每 2 週一次，最多 1 年",["480 mg IV，每 4 週一次，最多 2 年","200 mg IV，每 3 週一次，最多 18 個療程","1200 mg IV，每 3 週一次，最多 16 個療程"],"CheckMate 274 對照為輔助 Placebo；Nivolumab 240 mg q2w 最長 1 年（或至復發／毒性不可耐受）。"],
+["族群","CheckMate 274：未接受 neoadjuvant 化療、且 cisplatin-ineligible 或拒絕者，需符合何種術後病理條件才可納入？","≥ pT3 或 pN+",["≥ ypT2 或 ypN+","僅限 pT1","任何病理分期皆可"],"曾接受 neoadjuvant 化療者需 ≥ ypT2 或 ypN+；未接受者且 cisplatin-ineligible/拒絕者需 ≥ pT3 或 pN+。"],
+["劑量","AMBASSADOR (Alliance A031501) 的實驗組與對照組為何？","輔助 Pembrolizumab 200 mg q3w（最多 1 年，18 個療程）vs. 觀察",["輔助 Atezolizumab 1200 mg q3w vs. 觀察","輔助 Nivolumab 240 mg q2w vs. Placebo","輔助 Pembrolizumab vs. 輔助 Nivolumab"],"AMBASSADOR 對照組為單純觀察，非安慰劑。"],
+["結論","AMBASSADOR 的 DFS 與 OS 結果，最適合如何描述？","DFS 顯著改善；期中 OS 未達顯著，可能受觀察組復發後交叉使用 IO 所干擾",["DFS 與 OS 皆明確顯著改善","DFS 與 OS 皆未改善","DFS 未改善，但 OS 顯著改善"],"資料指出 DFS HR 0.69 達顯著；OS 於期中分析未顯著，觀察組復發後高比例使用 IO 治療。"],
+["族群","POUT 試驗的收案族群為何？","接受根除性腎輸尿管切除術後的上泌尿道上皮癌（UTUC）高風險病人",["局部晚期膀胱癌且準備接受 RC","轉移性尿路上皮癌第一線病人","接受 TURBT 的非肌肉侵襲性膀胱癌"],"POUT 為 UTUC 術後輔助：pT2–T4 N0–N3 M0，或 pT1–T4 N1–N3 M0。"],
+["劑量","POUT 的輔助化療方案為何？","Gemcitabine + Cisplatin（CrCl 30–49 則改 Carboplatin），每 21 天一次，術後 90 天內開始，共 4 個療程",["ddMVAC 每 2 週一次共 6 個療程","Gemcitabine + Cisplatin 每 3 週一次共 6 個療程","僅 Cisplatin 單藥每 3 週一次共 4 個療程"],"POUT：Gem 1000 mg/m²（D1, D8）+ Cis 70 mg/m²（D1）；CrCl 30–49 mL/min 改 Carboplatin AUC 4.5/5；對照為術後監測。"],
+["族群","CheckMate 901 收案的族群特徵為何？","無法切除之 la/mUC、Cisplatin-eligible、未曾接受全身性治療",["Cisplatin-ineligible 病人","第一線化療後疾病控制者","曾接受 platinum 與 CPI 後惡化者"],"CheckMate 901 針對 cisplatin-eligible（CrCl ≥ 60、ECOG 0–1）；Cisplatin-ineligible 為排除條件。"],
+["劑量","CheckMate 901 的 Nivolumab 誘導與維持劑量為何？","誘導：Nivolumab 360 mg + Gem/Cis q3w（最多 6 個療程）；維持：Nivolumab 480 mg q4w（最多 2 年）",["Nivolumab 240 mg q2w，共 1 年","Nivolumab 200 mg q3w，最多 35 個療程","Nivolumab 3 mg/kg + Ipilimumab 1 mg/kg q3w × 4"],"CheckMate 901 實驗組為 Nivolumab + Gem/Cis（最多 6 個療程）後 Nivolumab 單藥維持。"],
+["試驗","哪個試驗建立「第一線 platinum 化療後疾病控制，接續免疫單藥維持」的範式？","JAVELIN Bladder 100",["IMvigor130","KEYNOTE-361","CheckMate 901"],"JAVELIN Bladder 100：4–6 個療程 platinum 化療後達 CR/PR/SD，於 4–10 週內開始 Avelumab + BSC（對照 BSC）。"],
+["族群","JAVELIN Bladder 100 何者「不符合」收案條件？","第一線化療期間或緊接之後疾病惡化（PD）",["化療 4–6 個療程後達 SD","化療後達 PR","化療後達 CR"],"收案需第一線化療後達疾病控制（CR、PR 或 SD）；PD 為排除條件。"],
+["試驗","IMvigor130 的三個治療組為何？","Atezolizumab + 化療；Atezolizumab 單藥；Placebo + 化療",["EV + Pembrolizumab；Pembrolizumab 單藥；化療","Nivolumab + Gem/Cis；Nivolumab 單藥；Gem/Cis","Avelumab 維持；BSC；化療"],"IMvigor130 為 3 臂設計（Arm A/B/C）。"],
+["結論","IMvigor130（Atezolizumab + 化療 vs. Placebo + 化療）的結果，最適合如何描述？","PFS 達顯著改善，但 OS 未跨越預設的嚴格顯著界線",["PFS 與 OS 皆明確顯著改善","PFS 未改善，但 OS 顯著改善","兩者皆明顯惡化"],"資料描述為 Negative for OS；後續 Atezolizumab 在第一線 mUC 的部分適應症遭撤回。"],
+["結論","KEYNOTE-361（Pembrolizumab ± 化療）的結果帶來什麼影響？","Pembrolizumab + 化療未達預設統計門檻（陰性）；第一線 Pembrolizumab 單藥限縮於 platinum-ineligible 且 CPS ≥ 10",["全面確立 Pembrolizumab + 化療為第一線標準","Pembrolizumab 單藥適用於所有第一線病人","Pembrolizumab 於第一線完全無法使用"],"KEYNOTE-361 的 Dual primary endpoints（PFS、OS）皆未達顯著，促成法規調整。"],
+["族群","KEYNOTE-045 的收案族群為何？","於 platinum-based 化療後復發或惡化之 la/mUC",["未曾治療之第一線 mUC","高風險術後 MIUC","HER2 IHC 3+ 之實體腫瘤"],"KEYNOTE-045：Pembrolizumab 200 mg q3w（最多 2 年）vs. 研究者選擇之化療（Paclitaxel、Docetaxel 或 Vinflunine）。"],
+["結論","KEYNOTE-045 的結果，最適合如何描述？","OS 顯著改善，但 PFS 兩組無顯著差異",["PFS 顯著改善，OS 無差異","OS 與 PFS 皆顯著改善","OS 與 PFS 皆無差異"],"KEYNOTE-045 的 Dual primary 為 OS 與 PFS：OS HR 0.73 達顯著，PFS HR 0.98 無顯著差異。"],
+["族群","EV-301 的收案族群為何？","la/mUC 於 platinum 化療及一種 CPI 治療期間或之後惡化",["未曾接受任何全身治療","僅 platinum 後惡化、未曾使用 CPI","HER2 表現陽性者"],"EV-301 為後線試驗；對照為 Docetaxel／Paclitaxel／Vinflunine，是第一個於 Phase 3 證實 ADC 可改善 OS 的試驗。"],
+["劑量","TROPHY-U-01 Cohort 1 的 Sacituzumab Govitecan 給藥為何？","10 mg/kg IV，21 天週期之 Day 1 與 Day 8",["1.25 mg/kg IV，Day 1、8、15","5.4 mg/kg IV，每 3 週一次","7.4 GBq IV，每 6 週一次"],"TROPHY-U-01 為單臂 Phase 2，Primary endpoint 為 ORR（BICR）。"],
+["結論","TROPHY-U-01 所促成的 FDA 加速批准，後來發生什麼事？","因 confirmatory trial TROPiCS-04 未達主要終點，FDA 撤回 UC 適應症",["轉為完全批准並成為第一線標準","改為僅限 HER2 陽性病人","轉換為輔助治療適應症"],"資料以 ⚠️ 標註：TROPiCS-04 未達主要終點，FDA 已撤回 UC 適應症。"],
+["劑量","DESTINY-PanTumor02（UC cohort）中 T-DXd 的給藥為何？","5.4 mg/kg IV，每 3 週一次",["1.25 mg/kg IV，Day 1 與 Day 8","10 mg/kg IV，Day 1 與 Day 8","200 mg IV，每 3 週一次"],"DESTINY-PanTumor02 為 HER2 表現（IHC 3+ 或 2+）實體腫瘤的 Basket trial，支持 tumor-agnostic HER2 適應症。"],
+["族群","DESTINY-PanTumor02 的收案條件為何？","局部晚期或轉移性 HER2 表現（IHC 3+ 或 2+）實體腫瘤，且先前至少一線治療後惡化",["僅限 IHC 0 的膀胱癌","未曾治療之 HER2 陰性腫瘤","曾接受 HER2 標靶 ADC 者優先"],"曾接受 HER2 標靶 ADC、有 ILD 病史或活動性肺炎為排除條件。"],
+["族群","下列何者「不是」EV-303 定義 cisplatin-ineligible 的條件？","ECOG PS 0 且腎功能完全正常",["肌酸酐清除率 30–59 mL/min","ECOG PS 2","CTCAE v4 Grade ≥2 聽力損失"],"EV-303 的 cisplatin-ineligible 為下列至少一項：CrCl 30–59、ECOG PS 2、Grade ≥2 聽力損失、NYHA III 級心衰竭。"],
+["結論","EV-303 / KEYNOTE-905 的整體結論，最適合如何描述？","EV + Pembrolizumab 在 EFS、OS 與 pCR 皆明顯優於單純手術，但 Grade ≥3 不良事件較高",["僅 pCR 提高，EFS 與 OS 無差異","EFS 改善但 OS 明顯惡化","與單純手術無顯著差異且毒性相同"],"EV-303 Primary endpoint 為 EFS（BICR）；關鍵次要為 OS、pCR；試驗為開放性標籤且對照為單純手術。"],
+["結論","EV-304 與 EV-303 合併來看，傳達的臨床訊息為何？","不論是否適合 Cisplatin，圍手術期 EV + Pembrolizumab 皆為可行的治療方向",["僅適用於適合 Cisplatin 者","僅適用於不適合 Cisplatin 者","圍手術期應避免使用免疫治療"],"EV-304 在 cisplatin-eligible 者優於 Gem/Cis，EV-303 在 cisplatin-ineligible 者優於單純手術；EV 組治療時間較長、毒性較高。"],
+["結論","EV-302 / KEYNOTE-A39 的亞組分析，傳達何種訊息？","不論 Cisplatin 適合性或 PD-L1 表現高低，各預設亞組的臨床獲益一致",["僅 PD-L1 高表現者獲益","僅 Cisplatin-eligible 者獲益","僅 Carboplatin 適用者獲益"],"EV-302 對照為 Gem + Cis 或 Carboplatin；其結果使第一線免疫治療不再需依 cisplatin eligibility 決定。"],
+["族群","EV-304 / KEYNOTE-B15 的收案族群為何？","適合 Cisplatin 的 MIBC（cT2–T4aN0M0 或 T1–T4aN1M0），ECOG PS 0–1",["Cisplatin-ineligible 的 MIBC","局部晚期 UTUC 術後病人","轉移性 UC 第一線病人"],"EV-304 依 Galsky 準則為非 cisplatin-ineligible；依方案屬 cisplatin-ineligible 者為排除條件。"],
+["試驗","哪個試驗證實 Trop-2 標靶 ADC 對化療與免疫治療皆失敗的 mUC 具療效，但後來適應症遭撤回？","TROPHY-U-01",["EV-301","DESTINY-PanTumor02","KEYNOTE-045"],"TROPHY-U-01 Cohort 1 的 Primary endpoint 為 BICR 評估之 ORR。"]
+]},
+
+rcc:{ name:"Renal Cell Carcinoma", zh:"腎細胞癌", emoji:"🫘", color:"#ec4899", desc:"輔助、mRCC 一線與後線、nccRCC", qs:[
+["試驗","哪個輔助試驗是第一個且唯一同時證實 DFS 與 OS 獲益的 Adjuvant Anti-PD-1 Phase 3 試驗？","KEYNOTE-564",["IMmotion010","CheckMate 914","RAMPART"],"KEYNOTE-564：術後 ccRCC，Pembrolizumab 200 mg IV Q3W 最多 17 個療程（約 1 年）vs. Placebo。"],
+["劑量","LITESPARK-022 的實驗組劑量為何？","Pembrolizumab 400 mg IV Q6W（最多 9 劑）+ Belzutifan 120 mg PO QD（最多 1 年）",["Pembrolizumab 200 mg Q3W + Belzutifan 120 mg QD","Pembrolizumab 400 mg Q6W + Lenvatinib 20 mg QD","Nivolumab 480 mg Q4W + Belzutifan 120 mg QD"],"LITESPARK-022 對照組為 Pembrolizumab + Placebo，驗證在輔助 PD-1 基礎上加入 HIF-2α 抑制劑。"],
+["結論","IMmotion010（輔助 Atezolizumab）的結果，傳達的重點為何？","DFS 未達統計顯著，凸顯抗 PD-L1 與抗 PD-1 在輔助治療可能成敗不同",["DFS 與 OS 皆顯著改善","DFS 顯著改善但毒性過高","與 KEYNOTE-564 結果完全一致"],"IMmotion010 為 Atezolizumab 1200 mg IV Q3W 共 16 個療程 vs. Placebo，結果為負向。"],
+["試驗","哪個試驗設計為「術前單次 Nivolumab ＋ 術後輔助 Nivolumab」的圍手術期模式，並因無效提前終止？","PROSPER RCC (EA8143)",["CheckMate 914","KEYNOTE-564","RAMPART"],"PROSPER RCC：術前 Nivolumab 480 mg × 1 劑，術後 480 mg Q4W 共 9 劑；對照為單純手術；Primary endpoint 為 RFS。"],
+["試驗","RAMPART 的三個治療組為何？","Active Surveillance；輔助 Durvalumab；輔助 Durvalumab + Tremelimumab",["Pembrolizumab；Nivolumab；Atezolizumab","Nivolumab + Ipilimumab；Nivolumab；Placebo","Belzutifan；Everolimus；Placebo"],"RAMPART：Durvalumab 1500 mg Q4W 共 12 個月；Tremelimumab 75 mg 於 C1D1 與 C2D1；Primary endpoints 為 DFS 與 OS。"],
+["劑量","CheckMate 914 Part A 的實驗組劑量為何？","Nivolumab 240 mg Q2W（12 劑）+ Ipilimumab 1 mg/kg Q6W（4 劑）",["Nivolumab 3 mg/kg + Ipilimumab 1 mg/kg Q3W × 4","Nivolumab 480 mg Q4W 共 1 年","Nivolumab 240 mg Q2W + Cabozantinib 40 mg QD"],"CheckMate 914 Part A 為 Nivo + Ipi vs. Placebo；Part B 為 Nivo 單藥 vs. Placebo；Primary endpoint 為 DFS（BICR）。"],
+["結論","CheckMate 914 的整體結論，最適合如何描述？","不論雙免疫（Part A）或 Nivolumab 單藥（Part B），DFS 皆無獲益；雙免疫毒性導致較高停藥率",["雙免疫顯著改善 DFS","僅 Nivolumab 單藥改善 DFS","兩部分皆顯著改善 OS"],"資料指出雙免疫短療程毒性高且無 DFS 獲益，Part B 亦未顯示獲益。"],
+["族群","輔助試驗收案條件比較：哪個試驗的 pT3a 僅收 Grade 3–4？","IMmotion010",["KEYNOTE-564","LITESPARK-022","三者皆收 Any Grade"],"KEYNOTE-564 與 LITESPARK-022 的 pT3a 為 Any Grade；IMmotion010 僅 Grade 3–4。"],
+["族群","輔助試驗收案條件比較：KEYNOTE-564 的 pT2 條件為何？","Grade 4 或 sarcomatoid",["Any Grade","僅 Grade 3","排除所有 pT2"],"IMmotion010 的 pT2 僅收 Grade 4，KEYNOTE-564 與 LITESPARK-022 則為 Grade 4 或 sarcomatoid。"],
+["劑量","CheckMate 214 的誘導方案劑量為何？","Nivolumab 3 mg/kg + Ipilimumab 1 mg/kg IV Q3W，共 4 劑，之後 Nivolumab 維持",["Nivolumab 240 mg Q2W + Ipilimumab 1 mg/kg Q6W","Nivolumab 3 mg/kg + Ipilimumab 3 mg/kg Q3W","Nivolumab 240 mg + Cabozantinib 40 mg QD"],"CheckMate 214 對照為 Sunitinib 50 mg QD（4 週服藥/2 週停藥）。"],
+["族群","CheckMate 214 的 Co-primary endpoints 主要針對哪一族群？","IMDC Intermediate/Poor-risk",["IMDC Favorable-risk","non-clear cell RCC","術後 M1 NED"],"CheckMate 214 的 Co-primary endpoints（OS、PFS、ORR）針對 IMDC Intermediate/Poor risk。"],
+["劑量","KEYNOTE-426 的實驗組劑量為何？","Pembrolizumab 200 mg IV Q3W（最多 24 個月）+ Axitinib 5 mg PO BID",["Pembrolizumab 200 mg Q3W + Lenvatinib 20 mg QD","Pembrolizumab 200 mg Q3W + Cabozantinib 40 mg QD","Avelumab 10 mg/kg Q2W + Axitinib 5 mg BID"],"KEYNOTE-426 的 Dual primary 為 OS 與 PFS（ITT），對照為 Sunitinib。"],
+["結論","KEYNOTE-426 長期追蹤中，Favorable-risk 族群的 OS 趨勢如何？","OS HR 隨時間收窄至接近／超過 1",["Favorable-risk 持續顯示最大 OS 獲益","Favorable-risk 完全未納入","OS 與 Sunitinib 完全相同"],"資料指出延伸追蹤顯示 Favorable-risk 族群 OS HR 隨時間收窄（HR 1.17–1.20）。"],
+["劑量","CheckMate 9ER 的實驗組劑量為何？","Nivolumab 240 mg IV Q2W（或 480 mg Q4W）+ Cabozantinib 40 mg PO QD",["Nivolumab 3 mg/kg + Cabozantinib 60 mg QD","Pembrolizumab 200 mg Q3W + Cabozantinib 40 mg QD","Nivolumab 240 mg Q2W + Axitinib 5 mg BID"],"CheckMate 9ER 的 Primary endpoint 為 PFS（BICR），所有 IMDC 風險族群皆納入。"],
+["結論","CheckMate 9ER 除了存活與緩解率外，還提供什麼額外訊息？","HRQoL 顯著改善，破除 IO + TKI 必降低生活品質的疑慮",["生活品質明顯惡化","未評估生活品質","僅 Favorable-risk 生活品質改善"],"資料記載 CheckMate 9ER 記錄到患者 HRQoL 顯著改善。"],
+["試驗","CLEAR 試驗的三個治療組為何？","Lenvatinib + Pembrolizumab；Lenvatinib + Everolimus；Sunitinib",["Lenvatinib + Pembrolizumab；Pembrolizumab；Sunitinib","Cabozantinib + Nivolumab；Nivolumab；Sunitinib","Axitinib + Avelumab；Avelumab；Sunitinib"],"CLEAR：Arm A Lenvatinib 20 mg + Pembrolizumab 200 mg Q3W；Arm B Lenvatinib 18 mg + Everolimus 5 mg；Arm C Sunitinib。"],
+["結論","CLEAR 的 Lenvatinib + Pembrolizumab 在療效特色上最突出的是什麼？","極高的客觀緩解率與完全緩解率，且 PFS 顯著優於 Sunitinib",["僅延長 PFS，緩解率與 Sunitinib 相近","OS 明顯劣於 Sunitinib","僅適用於 non-clear cell RCC"],"資料指出其為 1L mRCC Phase 3 中 ORR 最高者，CR 率亦高。"],
+["結論","JAVELIN Renal 101（Avelumab + Axitinib）最終 OS 結果如何描述？","PFS 與 ORR 改善，但最終 OS 未達統計顯著",["OS 明顯顯著優於 Sunitinib","PFS 未改善","OS 明顯劣於 Sunitinib"],"JAVELIN Renal 101 的 Co-primary 為 PD-L1 陽性族群 PFS 與 OS；因後續多線治療交叉干擾，OS 未顯著。"],
+["族群","COSMIC-313 僅收哪一類風險族群？","IMDC Intermediate 或 Poor risk 的 clear-cell RCC",["IMDC Favorable-risk","所有 IMDC 風險族群","non-clear cell RCC"],"COSMIC-313：Cabozantinib + Nivolumab + Ipilimumab（三聯）vs. Placebo + Nivolumab + Ipilimumab。"],
+["結論","COSMIC-313 的結論，最適合如何描述？","三聯延長 PFS，但無 OS 獲益且高級別毒性顯著增加，臨床上不被推薦為標準一線",["三聯同時顯著改善 PFS 與 OS 且毒性相近","三聯 PFS 劣於雙聯","三聯為所有風險族群一線首選"],"資料指出 Grade 3/4 治療相關不良事件顯著較高，OS HR 為 1.02。"],
+["試驗","哪個試驗屬於適應性設計：先給 Nivolumab + Ipilimumab 誘導，3 個月後依反應分流並隨機決定是否加 Cabozantinib？","PDIGREE (Alliance A031704)",["COSMIC-313","CheckMate 214","CONTACT-03"],"PDIGREE：CR → Nivolumab 維持；PD → 改 Cabozantinib；Non-CR/Non-PD → 隨機分至 Nivolumab 或 Nivolumab + Cabozantinib。"],
+["劑量","LITESPARK-005 的實驗組與對照組為何？","Belzutifan 120 mg PO QD vs. Everolimus 10 mg PO QD",["Belzutifan 120 mg QD vs. Cabozantinib 60 mg QD","Belzutifan + Lenvatinib vs. Everolimus","Everolimus 10 mg QD vs. Placebo"],"LITESPARK-005 的 Dual primary 為 PFS 與 OS；PFS 顯著改善，OS 趨勢有利但未達顯著。"],
+["族群","LITESPARK-005 的收案族群為何？","曾接受 anti-PD-1/PD-L1 免疫治療及至少 1 種 VEGF-TKI 的 ccRCC",["未曾治療的 1L ccRCC","僅曾接受 TKI、未曾接受 IO","non-clear cell RCC"],"曾接受 HIF-2α 或 mTOR 抑制劑為排除條件。"],
+["試驗","哪個試驗在 post-IO 的 2L 情境中，比較 Belzutifan + Lenvatinib 與 Cabozantinib？","LITESPARK-011",["LITESPARK-005","LITESPARK-012","CONTACT-03"],"LITESPARK-011：Belzutifan 120 mg + Lenvatinib 20 mg QD vs. Cabozantinib 60 mg QD；PFS 與 ORR 顯著改善，OS 呈正向趨勢。"],
+["結論","LITESPARK-012（在 1L Pembro + Lenvatinib 上加 Belzutifan 或 Quimactat 的三聯）結果如何描述？","PFS 與 OS 相較標準 Pembro + Lenvatinib 皆未達統計顯著改善",["PFS 與 OS 皆顯著改善","僅 OS 顯著改善","三聯毒性低於雙聯且療效更佳"],"資料提示在已具強效 IO+TKI 的一線基礎上疊加藥物，並未帶來實質存活突破。"],
+["結論","CONTACT-03（Atezolizumab + Cabozantinib vs. Cabozantinib，post-ICI）的結論為何？","加上 ICI 無額外臨床益處，只顯著增加毒性",["顯著延長 PFS 與 OS","僅對 non-clear cell RCC 有益","毒性反而較低"],"CONTACT-03 的 Dual primary 為 PFS 與 OS；結果不支持 post-ICI 再挑戰（Re-challenge）。"],
+["試驗","哪個試驗以 Tivozanib 為基礎，在 post-IO 加入 Nivolumab 未見效益，與 CONTACT-03 互相呼應？","TiNIVO-2",["METEOR","LITESPARK-003","KEYNOTE-B61"],"TiNIVO-2：Tivozanib 1.34 mg QD（服藥 3 週/停藥 1 週）+ Nivolumab 480 mg Q4W vs. Tivozanib 單藥。"],
+["劑量","METEOR 的實驗組與對照組為何？","Cabozantinib 60 mg PO QD vs. Everolimus 10 mg PO QD",["Cabozantinib 40 mg QD vs. Sunitinib 50 mg QD","Belzutifan 120 mg QD vs. Everolimus 10 mg QD","Cabozantinib + Nivolumab vs. Everolimus"],"METEOR 收案為至少 1 種 VEGFR-TKI 治療後惡化的 ccRCC；Primary endpoint 為 PFS，OS 亦顯著改善。"],
+["試驗","LITESPARK-003 是什麼性質的試驗？","Phase 2 多世代：Belzutifan 120 mg + Cabozantinib 60 mg，分 1L 與 2L+ 兩個 cohort，Primary endpoint 為 ORR",["Phase 3 隨機：Belzutifan vs. Everolimus","Phase 3 輔助試驗","單臂 non-clear cell 試驗"],"資料說明其為全標靶無免疫（Non-IO）HIF-2α + TKI 組合的先驅試驗，為 LITESPARK-011 鋪路。"],
+["試驗","RADICAL (Alliance A031801) 在 mRCC 骨轉移病人中加入哪種藥物？","Radium-223（55 kBq/kg IV Q4W，共 6 劑）加在 Cabozantinib 上",["Lutetium-177 PSMA","Strontium-89 單藥","Belzutifan"],"RADICAL 為 Phase 2，Primary endpoint 為 SSE-FS；結果未達統計顯著。曾接受骨標靶放射性藥物者為排除條件。"],
+["試驗","ESPN 試驗的設計特色為何？","隨機交叉：一線 Everolimus → 二線 Sunitinib，或一線 Sunitinib → 二線 Everolimus（nccRCC）",["比較 Pembrolizumab 與 Sunitinib 的輔助試驗","單臂 Pembrolizumab + Lenvatinib","Nivolumab ± Ipilimumab 的 Phase 3"],"ESPN 為 Phase 2，一線治療 PFS 為 Primary endpoint；數值上 Sunitinib 一線較佳。"],
+["試驗","ASPEN 試驗比較的藥物為何？","Sunitinib vs. Everolimus（轉移性 non-clear cell RCC 一線）",["Nivolumab vs. Sunitinib","Cabozantinib vs. Sunitinib","Savolitinib vs. Sunitinib"],"ASPEN 為 Phase 2 隨機開放性標籤，奠定 Sunitinib 作為 nccRCC 一線對照標準。"],
+["劑量","SAVOIR 的 Savolitinib 劑量為何？","600 mg PO QD（體重 < 50 kg 者 400 mg QD）",["120 mg PO QD","60 mg PO QD","1.34 mg PO QD"],"SAVOIR 收案為 MET 驅動型 PRCC（中央分子確認），因招募困難提前關閉，僅 60 名隨機病人。"],
+["試驗","哪個試驗確立 Cabozantinib 為轉移性乳頭狀 RCC 的一線標準治療？","PAPMET (SWOG S1500)",["SAVOIR","ESPN","CheckMate 920"],"PAPMET：Cabozantinib 60 mg QD vs. Sunitinib 50 mg QD（4/2）；其他組別 Crizotinib 與 Savolitinib 因無效提前終止。"],
+["劑量","KEYNOTE-B61 的方案為何？","Pembrolizumab 200 mg IV Q3W（最多 2 年）+ Lenvatinib 20 mg PO QD，單臂",["Nivolumab 3 mg/kg + Ipilimumab 1 mg/kg","Cadonilimab 10 mg/kg + Axitinib 5 mg BID","Cabozantinib 60 mg QD 單藥"],"KEYNOTE-B61 為單臂 Phase 2，Primary endpoint 為 ORR（BICR），涵蓋多種 nccRCC 亞型。"],
+["結論","CheckMate 920 Cohort 1（Nivolumab + Ipilimumab 用於 nccRCC）的結果，最適合如何描述？","緩解率與 PFS 相較 clear cell RCC 較溫和，但部分病人仍獲長期 OS 獲益",["緩解率極高且超越所有 nccRCC 方案","完全無效","僅適用於 Papillary 亞型"],"CheckMate 920 為 Phase 3b/4，Primary endpoints 為安全性與 investigator-assessed ORR，結果支持後續隨機試驗 SUNNIFORCAST。"],
+["試驗","哪個隨機試驗比較 Nivolumab + Ipilimumab 與 SOC TKI 用於 1L nccRCC，Primary endpoint 為 12 個月 OS rate？","SUNNIFORCAST (AIO-NKR-0113)",["CheckMate 920","ESPN","SAMETA"],"SUNNIFORCAST 為 Phase 2；Dual IO 的 12 個月 OS rate 優於 SOC TKI（主要為 Sunitinib）。"],
+["試驗","SAMETA 針對哪一類病人，並使用哪三個治療組？","MET 驅動型 PRCC：Savolitinib + Durvalumab；Durvalumab；Sunitinib",["clear-cell RCC：Pembrolizumab；Axitinib；Sunitinib","術後 RCC：Durvalumab；Tremelimumab；觀察","non-clear cell RCC：Nivolumab；Ipilimumab；Everolimus"],"SAMETA 為 Phase 3，目前仍在進行中（ONGOING）；Primary endpoint 為 PFS（Savolitinib+Durvalumab vs. Sunitinib）。"],
+["劑量","Cadonilimab + Axitinib（ASCO 2026）的方案為何？","Cadonilimab 10 mg/kg IV Q3W + Axitinib 5 mg PO BID",["Cadonilimab 200 mg Q3W + Lenvatinib 20 mg QD","Cadonilimab 3 mg/kg + Ipilimumab 1 mg/kg","Cadonilimab 480 mg Q4W + Cabozantinib 40 mg QD"],"Cadonilimab 為 PD-1/CTLA-4 雙特異性抗體；Phase 1b/2 單臂，於 FH 缺失型 RCC（FH-dRCC）亞群緩解率特別突出。"]
+]},
+
+prostate:{ name:"Prostate Cancer", zh:"前列腺癌", emoji:"🛡️", color:"#10b981", desc:"Peri-OP、nmCRPC、mCSPC、mCRPC", qs:[
+["劑量","CHAARTED 中 Docetaxel 的給藥方式為何？","75 mg/m² IV，每 3 週一次，共 6 個療程（不併用每日 prednisone）",["75 mg/m² IV，每 3 週一次，併用 Prednisone 10 mg QD","25 mg/m² IV，每 3 週一次，共 10 個療程","50 mg/m² IV，每週一次"],"CHAARTED：ADT + Docetaxel vs. ADT alone；Primary endpoint 為 OS。"],
+["結論","CHAARTED 依腫瘤負擔分層後的結論，最適合如何描述？","存活獲益主要集中於高腫瘤負擔（High-volume）病人，低腫瘤負擔未達顯著差異",["低腫瘤負擔獲益最大","高、低腫瘤負擔獲益完全相同","兩者皆無獲益"],"High-volume 定義為內臟轉移及/或 ≥4 處骨轉移且至少 1 處位於脊椎/骨盆外。"],
+["族群","LATITUDE 的 High-risk de novo mCSPC 定義為何？","符合 3 項中至少 2 項：Gleason ≥8、≥3 處骨轉移、可測量內臟轉移",["符合 3 項中全部 3 項","PSA 倍增時間 ≤10 個月","≥4 處骨轉移且須有內臟轉移"],"LATITUDE：ADT + Abiraterone 1000 mg QD + Prednisone 5 mg QD vs. ADT + Dual Placebo；Co-primary 為 OS 與 rPFS。"],
+["劑量","STAMPEDE 中 Arm C 與 Arm G 的實驗藥物為何？","Arm C：SOC + Docetaxel（+ Prednisolone 10 mg）；Arm G：SOC + Abiraterone + Prednisolone 5 mg",["Arm C：SOC + Abiraterone；Arm G：SOC + Enzalutamide","Arm C：SOC + Enzalutamide；Arm G：SOC + Apalutamide","Arm C：SOC + Radium-223；Arm G：SOC + Olaparib"],"STAMPEDE 為 Phase 2/3 MAMS 多臂多階段平台試驗；Docetaxel 75 mg/m² q3w × 6。"],
+["試驗","哪個 mCSPC 試驗以第一代抗雄性素藥物（NSAA）為對照，並允許約 45% 病人併用早期 Docetaxel？","ENZAMET (ANZUP 1304)",["ARCHES","TITAN","LATITUDE"],"ENZAMET：Enzalutamide 160 mg QD vs. NSAA（bicalutamide／flutamide／nilutamide）+ ADT，Primary endpoint 為 OS。"],
+["族群","ARCHES 對先前 Docetaxel 的收案規定為何？","允許先前接受 Docetaxel（至多 6 個療程）",["完全排除曾接受 Docetaxel 者","必須接受過 Docetaxel","僅允許接受過 Abiraterone 者"],"ARCHES：ADT + Enzalutamide 160 mg QD vs. ADT + Placebo；Primary endpoint 為 rPFS；排除先前 ADT 治療中惡化者。"],
+["劑量","TITAN 的 Apalutamide 劑量為何？","240 mg PO QD + ADT",["160 mg PO QD","600 mg PO BID","1000 mg PO QD"],"TITAN 的 Co-primary 為 OS 與 rPFS，納入不限腫瘤負擔的 mCSPC。"],
+["試驗","哪個 mCSPC 試驗採 2×2 factorial design，並證實 ADT + Docetaxel 基礎上加 Abiraterone（三聯）的效益？","PEACE-1",["ARASENS","STAMPEDE","CHAARTED"],"PEACE-1 為 de novo mCSPC，Co-primary 為 rPFS 與 OS；高腫瘤負擔亞群獲益明顯。"],
+["劑量","ARASENS 的 Darolutamide 劑量與服用方式為何？","600 mg PO BID，隨餐服用，並與 ADT + Docetaxel（× 6 個療程）併用",["300 mg PO QD，空腹","240 mg PO QD","160 mg PO QD"],"ARASENS 對照為 ADT + Docetaxel + Placebo；Docetaxel 於 darolutamide/placebo 開始後 6 週內起始。"],
+["結論","ARASENS 與傳統 ARPI 相比，在安全性上的特色為何？","Darolutamide 不易穿透中樞神經，副作用主要來自化療本身",["中樞神經副作用顯著高於其他 ARPI","癲癇為最常見不良事件","需強制合併類固醇"],"資料指出其結構特殊，副作用顯著低於傳統 ARPI，主要不良反應僅來自化療。"],
+["試驗","哪個試驗在攜帶前瞻性檢出 HRR 基因變異的 mCSPC 中，評估 ADT + Enzalutamide + Talazoparib？","TALAPRO-3",["TALAPRO-2","PROfound","PROTEUS"],"TALAPRO-3 對照為 ADT + Enzalutamide + Placebo；Talazoparib 0.5 mg QD（中度腎功能不全者 0.35 mg QD）；Primary endpoint 為 rPFS。"],
+["族群","SPARTAN 的 nmCRPC 高轉移風險定義為何？","PSA 倍增時間（PSADT）≤ 10 個月",["PSADT ≥ 20 個月","≥ 4 處骨轉移","Gleason ≥ 8"],"SPARTAN：Apalutamide 240 mg QD + ADT vs. Placebo + ADT（2:1），Primary endpoint 為 MFS。"],
+["劑量","PROSPER 的 Enzalutamide 劑量與試驗設計為何？","160 mg PO QD + ADT，與 Placebo + ADT 以 2:1 隨機",["240 mg PO QD，1:1","600 mg PO BID，2:1","80 mg PO QD，1:1"],"PROSPER 收案為 PSADT ≤10 個月、PSA ≥2.0、睪固酮 <50 ng/dL 的 nmCRPC；Primary endpoint 為 MFS。"],
+["試驗","哪個 nmCRPC 試驗特別強調中樞神經毒性與安慰劑幾乎無異，且未自動排除癲癇或心臟病史病人？","ARAMIS",["SPARTAN","PROSPER","TITAN"],"ARAMIS：Darolutamide 600 mg PO BID + ADT；SPARTAN 與 PROSPER 則自動排除癲癇病史等易誘發癲癇之疾患。"],
+["劑量","TROPIC 的實驗組與對照組為何？","Cabazitaxel 25 mg/m² q3w + Prednisone vs. Mitoxantrone 10 mg/m² q3w + Prednisone",["Cabazitaxel 25 mg/m² vs. Docetaxel 75 mg/m²","Cabazitaxel 20 mg/m² vs. Placebo","Mitoxantrone vs. Abiraterone"],"TROPIC 為 post-docetaxel mCRPC，最多 10 個療程；PROSELICA 證實 20 mg/m² 於 OS 不劣於 25 mg/m² 且毒性較低。"],
+["族群","COU-AA-301 的收案族群為何？","mCRPC 於 1–2 種化療（至少一種含 Docetaxel）期間或之後惡化",["未曾接受化療的無症狀 mCRPC","nmCRPC","PSMA PET 陽性者"],"COU-AA-301：Abiraterone 1000 mg QD + Prednisone 5 mg BID vs. Placebo + Prednisone，Primary endpoint 為 OS。"],
+["族群","COU-AA-302 的收案與排除條件中，何者正確？","無症狀或輕微症狀、未曾化療的 mCRPC；排除內臟轉移（如肝、肺）",["已接受過 Docetaxel 的病人","必須有內臟轉移","需規律使用鴉片類藥物"],"COU-AA-302 的 Co-primary 為 rPFS 與 OS；僅淋巴結或骨轉移可納入。"],
+["試驗","哪個試驗證實 Enzalutamide 於 post-Docetaxel mCRPC 的效益，且不需強制合併類固醇？","AFFIRM",["PREVAIL","PROSPER","ARCHES"],"AFFIRM：Enzalutamide 160 mg QD vs. Placebo（2:1），Primary endpoint 為 OS；癲癇發生率低。"],
+["族群","PREVAIL 的收案條件為何？","無症狀或輕微症狀、未曾化療、ECOG PS 0 的 mCRPC；排除肝臟內臟轉移（肺轉移可納入）",["已接受 Docetaxel 的 mCRPC","ECOG PS 2 的病人","僅限 BRCA 突變者"],"PREVAIL 的 Co-primary 為 rPFS 與 OS，並大幅延後開始化療的時間。"],
+["劑量","ALSYMPCA 中 Radium-223 的劑量與頻率為何？","50 kBq/kg IV，每 4 週一次，最多 6 個療程（後續標準修訂為 55 kBq/kg）",["7.4 GBq IV，每 6 週一次","300 mg PO BID","25 mg/m² IV，每 3 週一次"],"ALSYMPCA 收案為症狀性 CRPC、≥2 處骨轉移、無已知內臟轉移。"],
+["結論","Radium-223 與 Abiraterone 併用的安全性警示為何？","ERA-223 顯示併用 Abiraterone + Prednisone 骨折風險增加，目前直接併用為禁忌",["併用可顯著降低骨折","併用為標準建議","併用僅增加皮疹"],"資料以 ⚠️ 標註此安全性警示。"],
+["試驗","哪個試驗證實：Docetaxel 與一種 ARTA 失效且 12 個月內惡化後，換用 Cabazitaxel 優於換用另一種 ARTA？","CARD",["PROfound","TROPIC","PSMAfore"],"CARD：Cabazitaxel 25 mg/m² q3w + Prednisone + G-CSF vs. Abiraterone 或 Enzalutamide，Primary endpoint 為 rPFS。"],
+["族群","PROfound 的 Cohort A 包含哪些 HRR 基因？","BRCA1、BRCA2 或 ATM",["BARD1、BRIP1、CDK12","僅 PALB2","CHEK1、CHEK2、FANCL"],"PROfound：Olaparib 300 mg BID vs. 醫師選擇的 Abiraterone 或 Enzalutamide；Primary endpoint 為 Cohort A 的 rPFS。"],
+["族群","VISION 的收案條件為何？","68Ga-PSMA-11 PET 確認 PSMA 陽性 mCRPC，且已接受 ARTA 及 1–2 種紫杉醇化療",["未曾接受任何 ARTA 者","PSMA 陰性者優先","FDG 陽性／PSMA 陰性病灶者"],"VISION：177Lu-PSMA-617 7.4 GBq（200 mCi）IV 每 6 週一次、最多 6 個療程 + SOC vs. SOC；Co-primary 為 rPFS 與 OS。"],
+["試驗","哪個 Phase 2 試驗首次直接比較 177Lu-PSMA-617 與 Cabazitaxel，並採用 PSMA/FDG 雙 PET 篩選？","TheraP",["VISION","PSMAfore","CARD"],"TheraP 的 Primary endpoint 為 PSA 反應率；最終 OS 兩組相近，與交叉使用及嚴格雙 PET 篩選族群有關。"],
+["族群","PSMAfore 與 VISION 在先前化療條件上的差異為何？","PSMAfore 收未曾接受 mCRPC 階段紫杉醇化療者，VISION 則需曾接受 1–2 種紫杉醇化療",["PSMAfore 需曾化療，VISION 不需","兩者皆需曾化療","兩者皆禁止先前 ARTA"],"PSMAfore：177Lu-PSMA-617 vs. 換用另一 ARTA；OS 受高比例交叉使用影響。"],
+["劑量","TALAPRO-2 的 Talazoparib 劑量為何？","0.5 mg PO QD（中度腎功能不全者 0.35 mg QD）+ Enzalutamide 160 mg QD",["1 mg PO BID","300 mg PO BID","240 mg PO QD"],"TALAPRO-2 於 1L mCRPC；Cohort 1 為 All-comers，Cohort 2 為前瞻性篩選之 HRR 突變者；貧血為最常見 Grade 3–4 不良事件。"],
+["劑量","PROTEUS 的療程時程為何？","以 28 天為 1 個療程：術前 6 個療程 → RP + PLND → 術後 6 個療程（Apalutamide 240 mg QD + ADT）",["術前 12 個療程後不再用藥","術後單獨給藥 24 個療程","術前 3 個療程、術後 3 個療程"],"PROTEUS 為隨機雙盲安慰劑對照；圍手術期暫停用藥（術前 2 週、術後 4 週）。"],
+["族群","PROTEUS 在淋巴結狀態的收案規定為何？","髂分叉以下骨盆淋巴結轉移（N1）不排除；傳統影像顯示遠端轉移（M1）則排除",["任何 N1 皆排除","M1 可納入","必須為 N1"],"PROTEUS 收案為高風險局部／局部晚期前列腺癌（Gleason ≥4+3 並符合其中一項條件）。"],
+["結論","PROTEUS 的 MFS 結果，需要特別留意什麼？","主要 MFS 含 PSMA-PET 的複合指標達顯著；僅以傳統影像評估時差異未達顯著",["不論影像方式 MFS 皆明確顯著","MFS 完全未達顯著","僅傳統影像達顯著，含 PSMA-PET 則否"],"PROTEUS 的 Dual primary 為 pCR/MRD 與 MFS（BICR）；Apalutamide 組皮疹與治療相關嚴重不良事件較多。"],
+["結論","SPARTAN 確立了什麼重要的替代終點概念？","以無遠端轉移生存期（MFS）作為 nmCRPC 試驗的有效替代終點",["以 PSA 反應率取代 OS","以 pCR 作為 nmCRPC 主要終點","以 ORR 作為主要終點"],"SPARTAN 為首個證實新世代 AR 抑制劑顯著延緩高風險 nmCRPC 轉移的 Phase 3，並獲 FDA 批准。"],
+["族群","CHAARTED 的排除條件為何？","轉移性疾病曾接受 ADT > 120 天，或曾接受全身性化療",["曾接受 ADT ≤ 12 週","ECOG PS 0","高腫瘤負擔者"],"CHAARTED 另排除 ≥ Grade 2 周邊神經病變。"],
+["族群","LATITUDE 的排除條件為何？","轉移性疾病曾接受 ADT > 3 個月、曾接受化療或新型 AR 標靶藥物",["初診斷 de novo mCSPC","Gleason ≥8","ECOG PS 0–2"],"LATITUDE 另排除嚴重心臟功能不全或未控制之高血壓。"],
+["結論","TheraP 與 VISION 相比，最適合如何描述 TheraP 的結論？","177Lu-PSMA-617 的 PSA 反應率與安全性優於 Cabazitaxel，但最終 OS 相近",["OS 顯著優於 Cabazitaxel","PSA 反應率較低但較安全","毒性高於 Cabazitaxel"],"TheraP 同時建立「FDG/PSMA 雙 PET/CT」篩選最適病人的精準診斷標準。"]
+]}
+};
+
+/* ===== 擴充題庫 ===== */
+const EX_UC = [
+["劑量","VESPER 中對照組 GC 的給藥方式為何？","Gemcitabine 1000 mg/m²（D1, D8）+ Cisplatin 70 mg/m²（D1），每 3 週一次，共 4 個療程",["Gemcitabine 1000 mg/m²（D1）+ Cisplatin 70 mg/m²（D2），每 2 週一次，共 6 個療程","Gemcitabine 1000 mg/m²（D1, D8）+ Carboplatin AUC 5，每 3 週一次，共 6 個療程","Gemcitabine 1000 mg/m²（D1, D8, D15）+ Cisplatin 35 mg/m²，每 4 週一次"],"VESPER 比較 6 個療程 ddMVAC 與 4 個療程 GC；GC 為 q3w。"],
+["劑量","ddMVAC 方案包含哪四種藥物？","Methotrexate、Vinblastine、Doxorubicin、Cisplatin",["Methotrexate、Vinblastine、Epirubicin、Carboplatin","Gemcitabine、Cisplatin、Paclitaxel、Doxorubicin","Methotrexate、Docetaxel、Doxorubicin、Cisplatin"],"VESPER：Methotrexate 30 mg/m²（D1）、Vinblastine 3 mg/m²（D2）、Doxorubicin 30 mg/m²（D2）、Cisplatin 70 mg/m²（D2），每 2 週一次並以 G-CSF 支持。"],
+["試驗設計","VESPER 的 Primary endpoint 為何？","3 年 PFS",["pCR 率","EFS（BICR）","5 年 OS"],"VESPER 整體 ITT 的 3 年 PFS 未達統計顯著，但 Neoadjuvant 亞群 PFS 與 5 年 OS 更新顯示優勢。"],
+["族群","VESPER 的收案族群為何？","準備接受根除性膀胱切除術的 MIBC（cT2–T4a N0M0），CrCl ≥ 50–60 mL/min、ECOG PS 0–1",["轉移性 UC 第一線病人","UTUC 術後輔助病人","Cisplatin-ineligible 的 MIBC"],"心臟功能不全、嚴重共病、肝或腎功能不足為排除條件。"],
+["結論","VESPER 在術前（Neoadjuvant）情境中，ddMVAC 相較 GC 的病理反應有何表現？","pCR 率數值上較高，並伴隨較佳的 PFS 與 5 年 OS",["pCR 率明顯較低","pCR 率完全相同且存活無差異","僅在術後輔助情境才有差異"],"資料顯示 Neoadjuvant 亞群 pCR 率 ddMVAC 較高，且 PFS HR 0.70、5 年 OS HR 0.71。"],
+["試驗設計","PURE-01 的試驗設計為何？","單臂、open-label 的 Phase 2：術前 Pembrolizumab 後接受 RC",["隨機 Phase 3，對照為 GC","雙盲安慰劑對照 Phase 3","輔助治療 Phase 3，對照為觀察"],"PURE-01 為 proof-of-concept，Primary endpoint 為 pT0 rate（pCR）。"],
+["族群","PURE-01 何者為排除條件？","曾因 MIBC 接受全身性化療或免疫治療、活動性自體免疫疾病",["PD-L1 CPS < 10","cT2N0M0","適合 RC 的病人"],"PURE-01 收案為適合 RC 的 MIBC（cT2–T4a N0M0）。"],
+["結論","PURE-01 的臨床定位最適合如何描述？","證實單藥免疫術前治療可得到可觀的病理完全緩解率且手術安全，但目前仍不是 standard of care",["已成為 MIBC 術前標準治療","術前免疫治療會增加手術風險","對 PD-L1 高表現者無效"],"PURE-01 為概念驗證試驗；PD-L1 CPS ≥ 10 亞群 pT0 率更高。"],
+["結論","PURE-01 的 3 年存活更新傳達什麼訊息？","達到 pT0/pT1/pTis 的病人 3 年 EFS 表現極佳",["達到 pT0 者仍幾乎全部復發","病理反應與預後無關","僅 PD-L1 陰性者有 EFS 獲益"],"2022 年 European Urology 更新顯示病理降期者 EFS 率很高。"],
+["試驗設計","ABACUS 的 Primary endpoint 為何？","pCR / pT0 rate",["OS","DFS","PFS2"],"ABACUS 為單臂 Phase 2，Atezolizumab 1200 mg q3w × 2 後接受 RC。"],
+["結論","ABACUS 的生物標記分析指出何者與病理完全緩解高度相關？","基線 CD8+ T 細胞浸潤及既有免疫基因表現",["基線 PSA 倍增時間","基線 HER2 表現","基線腎功能"],"ABACUS 同時證明術前短短兩劑 Atezolizumab 的安全性優異，但目前仍不是 standard of care。"],
+["試驗設計","EV-303 / KEYNOTE-905 的隨機分配方式與 Primary endpoint 為何？","1:1 隨機，Primary endpoint 為 EFS（BICR，ITT）",["2:1 隨機，Primary endpoint 為 pCR","1:1 隨機，Primary endpoint 為 DFS","單臂，Primary endpoint 為 ORR"],"關鍵次要終點為 OS 與 pCR。"],
+["族群","EV-303 的臨床分期收案條件為何？","cT2–T4aN0M0 或 T1–T4aN1M0，urothelial 成分 ≥ 50%",["僅 cT1N0M0","任何 N2 以上疾病","必須有遠端轉移"],"N2 以上淋巴結轉移或影像上 M1 為排除條件。"],
+["族群","EV-303 何者為排除條件？","曾接受抗 PD-1/PD-L1 治療、≥ Grade 2 周邊神經病變、活動性角膜炎或角膜潰瘍",["ECOG PS 2","腎功能不全（CrCl 30–59）","年齡超過 70 歲"],"EV-303 允許 ECOG PS 0–2 與 CrCl 30–59 的 cisplatin-ineligible 病人。"],
+["劑量","EV-303 中 Pembrolizumab 的給藥方式為何？","200 mg IV，Day 1，每 3 週一次",["400 mg IV，每 6 週一次","1200 mg IV，每 3 週一次","240 mg IV，每 2 週一次"],"EV 為 1.25 mg/kg IV，每 3 週療程的 Day 1 與 Day 8。"],
+["結論","EV-303 的探索性分析顯示 EFS 獲益與 pCR 的關係為何？","不論是否達到 pCR，EFS 獲益均存在",["僅達 pCR 者有 EFS 獲益","達 pCR 者反而 EFS 較差","兩者完全無關且無獲益"],"這代表即使未達 pCR，EV + Pembrolizumab 仍可能帶來好處。"],
+["結論","EV-303 的治療相關死亡有何特徵？","共 2 例（重症肌無力、中毒性表皮壞死溶解症），皆發生於術前階段",["皆發生於術後輔助階段","無任何治療相關死亡","皆因手術併發症"],"安全性方面 Grade ≥ 3 不良事件在 EV + Pembrolizumab 組較高。"],
+["結論","EV-303 最常見的任何等級不良事件為何？","搔癢與落髮",["視網膜病變與失明","癲癇與認知障礙","骨折與血栓"],"EV-303 的更新安全性補充指出最常見事件為搔癢與落髮。"],
+["結論","EV-303 對手術與後續治療的影響為何？","可進行手術的比例與單純手術組相近，且日後需復發／轉移後續治療的比例明顯較低",["能完成手術的比例明顯降低","後續治療需求明顯增加","與單純手術組在後續治療上無差別"],"此結果支持其在 cisplatin-ineligible 族群的臨床價值。"],
+["結論","EV-303 的重要意義為何？","首個在無法使用 Cisplatin 的 MIBC 中，同時顯著延長 EFS 與 OS 的 Phase 3 試驗",["首個證實輔助 Nivolumab 有效的試驗","首個比較 ddMVAC 與 GC 的試驗","首個證實 ctDNA 引導輔助治療的試驗"],"此族群過去缺乏有效的術前治療選項。"],
+["試驗設計","EV-304 / KEYNOTE-B15 的 Primary endpoint 與關鍵次要終點為何？","Primary：EFS（BICR）；關鍵次要：OS、pCR",["Primary：pCR；關鍵次要：ORR","Primary：OS；關鍵次要：PFS","Primary：DFS；關鍵次要：安全性"],"EV-304 為 Phase 3 隨機開放性標籤，對照為術前 Gem/Cis。"],
+["結論","EV-304 的安全性與治療負擔，需特別留意什麼？","EV 組治療時間較長，Grade ≥ 3 與嚴重不良事件、停藥比例較高",["EV 組毒性明顯較低","兩組治療時間相同","EV 組無任何停藥"],"試驗為開放性標籤，解讀時需考量這些差異。"],
+["結論","EV-304 的亞群分析（年齡、性別、種族、PD-L1 CPS、腫瘤分期等）傳達什麼？","預設亞群的 EFS 獲益方向一致",["僅 PD-L1 高表現者獲益","僅年輕病人獲益","亞群之間結果互相矛盾"],"此為 2026 年 EAU 與 NEJM 發表的補充資料。"],
+["試驗設計","EV-304 與 EV-303 最主要的差別為何？","EV-304 收適合 Cisplatin 者並以術前 Gem/Cis 為對照；EV-303 收不適合 Cisplatin 者並以單純手術為對照",["EV-304 為輔助試驗、EV-303 為術前試驗","兩者收案族群與對照組完全相同","EV-304 使用 ddMVAC 為對照"],"兩者皆為圍手術期 EV + Pembrolizumab 的 Phase 3 試驗。"],
+["劑量","EV-304 中對照組 Gem/Cis 的劑量為何？","Cisplatin 70 mg/m²（D1）+ Gemcitabine 1000 mg/m²（D1、8），每 3 週一次，共 4 個療程",["Cisplatin 35 mg/m² 每週一次共 12 週","Carboplatin AUC 5 + Gemcitabine，共 6 個療程","ddMVAC 每 2 週共 6 個療程"],"對照組之後接受 RC + PLND 並觀察，不給術後輔助治療。"],
+["試驗設計","EV-304 中，對照組在手術後的處置為何？","觀察（不給術後輔助藥物）",["輔助 Nivolumab","輔助 Pembrolizumab","輔助 EV"],"實驗組則於術後繼續 EV + Pembrolizumab。"],
+["族群","EV-302 的收案族群為何？","無法切除之 la/mUC、未曾接受全身性治療、適合 platinum 化療、ECOG PS 0–2",["第一線化療失敗的 mUC","高風險術後 MIUC","HER2 陽性的實體腫瘤"],"若術前/術後化療已完成超過 12 個月前則仍可納入。"],
+["劑量","EV-302 對照組的化療為何？","Gemcitabine + Cisplatin 或 Carboplatin，每 3 週一次，最多 6 個療程",["Docetaxel 單藥","Paclitaxel 單藥","Vinflunine 單藥"],"對照化療：Gemcitabine 1000 mg/m²（D1, D8）+ Cisplatin 70 mg/m² 或 Carboplatin AUC 4.5–5（D1）。"],
+["劑量","EV-302 中 Pembrolizumab 最多給幾個療程？","最多 35 個療程（200 mg，每 3 週）",["最多 6 個療程","最多 17 個療程","最多 9 個療程"],"EV 則依 21 天週期之 Day 1 與 Day 8 給藥。"],
+["試驗設計","EV-302 的 Dual primary endpoint 為何？","PFS 與 OS",["ORR 與 DoR","DFS 與 OS","EFS 與 pCR"],"EV-302 於 2023 / 2024 發表，為第一線 la/mUC 的 Phase 3 試驗。"],
+["族群","EV-302 何者為排除條件？","活動性中樞神經系統轉移、持續性感覺或運動神經病變 ≥ Grade 2、未控制之糖尿病",["ECOG PS 1","曾接受 12 個月前完成的術前化療","PD-L1 低表現"],"EV 的已知毒性（周邊神經病變、高血糖）反映在排除條件中。"],
+["結論","EV-302 的臨床意義為何？","取代近 30 年的 platinum 化療標準，不再需依 cisplatin eligibility 決定能否接受免疫治療",["僅適用於 cisplatin-eligible 病人","僅適用於 PD-L1 陽性病人","僅適用於後線治療"],"已成為 NCCN、ESMO、EAU 等指南推薦的第一線標準之一。"],
+["結論","EV-302 與對照化療相比，緩解的品質有何特色？","完全緩解（CR）率顯著較高，約為化療組的兩倍以上",["CR 率低於化療","兩組 CR 率相同","完全沒有 CR"],"EV-302 同時展現 PFS 與 OS 的大幅改善。"],
+["試驗設計","EV-301 的 Primary endpoint 為何？","OS",["PFS","ORR","DFS"],"EV-301 為後線 Phase 3，並成為第一個證實 ADC 可改善 OS 的 Phase 3 試驗。"],
+["族群","EV-301 何者為排除條件？","活動性中樞神經系統轉移、周邊神經病變 ≥ Grade 2",["曾接受 platinum 化療","曾接受 CPI","ECOG PS 1"],"EV-301 收案為於 platinum 化療及 CPI 期間或之後惡化之 la/mUC。"],
+["劑量","EV-301 對照化療包含哪些選項與劑量？","Docetaxel 75 mg/m²、Paclitaxel 175 mg/m² 或 Vinflunine 320 mg/m²，每 3 週一次",["Gemcitabine + Cisplatin","Carboplatin + Paclitaxel","Methotrexate + Vinblastine"],"對照為研究者選擇之單一藥物化療。"],
+["結論","EV-301 的整體結果，最適合如何描述？","EV 在 OS、PFS 與 ORR 皆優於單一藥物化療",["僅 ORR 較佳","OS 較差但 ORR 較高","三項皆無差異"],"24 個月 OS 追蹤更新確認存活優勢持續。"],
+["試驗設計","CheckMate 274 的 Dual primary endpoints 為何？","DFS（ITT）與 DFS（PD-L1 ≥ 1%）",["OS 與 PFS","pCR 與 EFS","ORR 與 DoR"],"CheckMate 274 為輔助 Nivolumab vs. Placebo 的 Phase 3。"],
+["族群","CheckMate 274 的收案病灶範圍為何？","高風險 MIUC（膀胱或上泌尿道），已接受根除手術",["僅限非肌肉侵襲性膀胱癌","僅限轉移性疾病","僅限術前病人"],"術後出現轉移性疾病（M1）者為排除條件。"],
+["結論","CheckMate 274 的臨床地位為何？","第一個獲 FDA/EMA 批准的術後輔助免疫治療 Phase 3 試驗，確立 Nivolumab 為高風險 MIUC 輔助標準",["證實輔助免疫治療無效","僅適用於 UTUC","已被 IMvigor010 取代"],"2023 ASCO GU 之 3 年更新顯示 DFS 獲益持續。"],
+["試驗設計","AMBASSADOR 的 Dual primary endpoints 為何？","DFS 與 OS",["PFS 與 ORR","EFS 與 pCR","OS 與 安全性"],"對照組為觀察，因此 OS 易受復發後交叉使用 IO 影響。"],
+["族群","AMBASSADOR 對於病理分期的收案條件為何？","曾 neoadjuvant 化療者 ypT2–T4a 或 ypN+；未接受者 pT3–T4a 或 pN+",["任何分期皆可","僅 pT1","僅 pTa 與 pTis"],"術後影像顯示殘存或轉移性疾病者為排除條件。"],
+["劑量","IMvigor010 的輔助 Atezolizumab 給藥為何？","1200 mg IV，每 3 週一次，最多 1 年（16 個療程）",["200 mg IV，每 3 週一次，最多 18 個療程","240 mg IV，每 2 週一次，最多 1 年","480 mg IV，每 4 週一次，最多 2 年"],"IMvigor010 對照為觀察；ITT 的 DFS 未達統計顯著。"],
+["結論","IMvigor010 的 ctDNA 事後分析對後續研究有何影響？","ctDNA 陽性病人可能獲益，直接促成利用 ctDNA 篩選病人的 Phase 3（IMvigor011）設計",["證實 ctDNA 無預測價值","證實 ctDNA 陰性者獲益最大","導致 Atezolizumab 成為輔助標準"],"2021 年 Nature 之生物標記分析顯示術後 ctDNA 可預測復發。"],
+["結論","下列哪個試驗在資料中「沒有」被標註為目前仍不是 standard of care？","CheckMate 274",["PURE-01","ABACUS","IMvigor010"],"PURE-01、ABACUS、IMvigor010 皆被標註為目前仍不是 SOC，CheckMate 274 則確立為輔助標準。"],
+["試驗設計","POUT 的對照組與 Primary endpoint 為何？","對照為術後監測（Surveillance）；Primary endpoint 為 DFS",["對照為輔助 Nivolumab；Primary 為 OS","對照為安慰劑；Primary 為 PFS","對照為觀察；Primary 為 pCR"],"POUT 為 UTUC 術後輔助 platinum 化療的 Phase 3。"],
+["族群","POUT 何者為排除條件？","曾接受 UTUC 全身性化療、CrCl < 30 mL/min",["CrCl 30–49 mL/min","pT2–pT4 疾病","N1–N3 疾病"],"CrCl 30–49 者可改用 Carboplatin。"],
+["結論","POUT 的長期追蹤傳達什麼訊息？","輔助化療不僅降低復發，5 年更新也確認具統計顯著的整體存活獲益",["僅降低復發，OS 無任何獲益","輔助化療反而增加復發","僅對 pT1 疾病有效"],"2024 年 JCO 發表之最終 5 年分析。"],
+["試驗設計","CheckMate 901 的對照組與 Primary endpoint 為何？","對照 Gem/Cis；Dual primary 為 OS 與 PFS（於 Cisplatin-eligible 族群）",["對照 Carboplatin；Primary 為 DFS","對照 BSC；Primary 為 OS","對照 EV + Pembrolizumab；Primary 為 EFS"],"實驗組為 Nivolumab + Gem/Cis 後 Nivolumab 維持。"],
+["結論","CheckMate 901 的完全緩解率表現如何？","合併方案使 CR 率提高近一倍，且達 CR 者反應持續時間長",["CR 率低於單用化療","CR 率與單用化療相同","無人達到 CR"],"長期反應評估指出達 CR 者中位 DoR 很長。"],
+["劑量","JAVELIN Bladder 100 中 Avelumab 的劑量為何？","10 mg/kg IV（後期更新為 800 mg 固定劑量），每 2 週一次",["200 mg IV，每 3 週一次","1200 mg IV，每 3 週一次","240 mg IV，每 2 週一次"],"持續至疾病惡化或無法接受之毒性。"],
+["族群","JAVELIN Bladder 100 的排除條件為何？","曾接受 anti-PD-1/PD-L1 抗體治療",["曾接受 platinum 化療","達到 SD 的病人","達到 PR 的病人"],"收案需於第一線 Gem + Cis 或 Carboplatin 4–6 個療程後達疾病控制。"],
+["結論","JAVELIN Bladder 100 的長期分析傳達什麼？","延長追蹤確認 Avelumab 維持治療在各亞群皆有長期整體存活獲益",["延長追蹤後獲益消失","僅 PD-L1 陰性者獲益","僅 Carboplatin 病人獲益"],"ESMO 2023 的長期分析確認其作為標準維持治療的地位。"],
+["劑量","IMvigor130 中 Atezolizumab 的劑量為何？","1200 mg IV，每 3 週一次",["200 mg IV，每 3 週一次","10 mg/kg IV，每 2 週一次","480 mg IV，每 4 週一次"],"化療為 Gemcitabine + Cisplatin 或 Carboplatin，每 3 週一次，最多 6 個療程。"],
+["結論","IMvigor130 的 2023 年最終 OS 分析傳達什麼？","Arm A 相較 Arm C 並無統計顯著的整體存活獲益",["Arm A 顯著優於 Arm C","Arm C 顯著優於 Arm A","兩組存活完全相同且 PFS 亦無差異"],"此結果加上適應症調整，使 Atezolizumab 在第一線 mUC 的部分適應症遭撤回。"],
+["試驗設計","KEYNOTE-361 的三個治療組為何？","Pembrolizumab 單藥；Pembrolizumab + platinum 化療；platinum 化療單獨",["EV + Pembrolizumab；Pembrolizumab；化療","Nivolumab + 化療；Nivolumab；化療","Avelumab；BSC；化療"],"主要比較為 Arm B（Pembro + 化療）vs. Arm C（化療）。"],
+["試驗設計","KEYNOTE-361 的 Dual primary endpoints 為何？","PFS 與 OS（Arm B vs. Arm C）",["ORR 與 DoR","DFS 與 EFS","pCR 與 MFS"],"二者皆未達預設的統計顯著門檻。"],
+["結論","KEYNOTE-045 的 5 年追蹤傳達什麼？","Pembrolizumab 組的 5 年存活率高於化療組，顯示長期存活的尾端效應",["兩組 5 年存活相同","化療組 5 年存活較高","Pembrolizumab 組全數存活"],"2021 年的 5 年更新確認免疫治療於後線 mUC 可帶來長期存活。"],
+["劑量","KEYNOTE-045 中 Pembrolizumab 的給藥與排除條件為何？","200 mg IV 每 3 週一次，最多 2 年；排除曾接受 anti-PD-1/PD-L1/PD-L2 者",["400 mg 每 6 週，最多 1 年；排除曾接受化療者","200 mg 每 2 週，不限期間；不排除任何人","10 mg/kg 每 2 週；排除曾接受 platinum 者"],"對照化療為 Paclitaxel、Docetaxel 或 Vinflunine。"],
+["試驗設計","TROPHY-U-01 Cohort 1 的 Primary endpoint 與收案族群為何？","Primary 為 ORR（BICR）；於 platinum 化療及 CPI 後惡化的 la/mUC",["Primary 為 OS；收案為第一線病人","Primary 為 DFS；收案為術後病人","Primary 為 pCR；收案為術前病人"],"試驗為多世代單臂 Phase 2。"],
+["結論","DESTINY-PanTumor02 UC cohort 的緩解率與 HER2 表現程度的關係為何？","HER2 IHC 3+ 亞群的緩解率明顯高於整體",["IHC 3+ 亞群緩解率較低","緩解率與 HER2 表現無關","僅 IHC 0 有反應"],"後續追蹤確認 HER2 表現程度與反應率及無惡化存活時間高度相關。"],
+["族群","DESTINY-PanTumor02 何者為排除條件？","曾接受 HER2 標靶 ADC、非感染性間質性肺病（ILD）病史或活動性肺炎",["曾接受化療","ECOG PS 1","IHC 3+ 病人"],"T-DXd 的重要風險之一為 ILD。"],
+["試驗","哪個試驗屬 Basket trial 並開啟晚期膀胱癌以 HER2 為標記的精準醫療？","DESTINY-PanTumor02 (UC Cohort)",["TROPHY-U-01","EV-301","KEYNOTE-045"],"此試驗支持 FDA 的 tumor-agnostic HER2 適應症。"],
+["試驗","哪個試驗的 Phase 3 結果促成高風險 UTUC 術後輔助化療成為全球標準？","POUT",["CheckMate 274","VESPER","JAVELIN Bladder 100"],"POUT 於 2020 / 2024 發表，為根除性腎輸尿管切除術後的輔助 Platinum 化療。"],
+["試驗","哪個試驗為「第一線 platinum 化療後」使用 PD-L1 抑制劑維持治療？","JAVELIN Bladder 100",["CheckMate 901","EV-302","KEYNOTE-045"],"CheckMate 901 為同步合併 Nivolumab，與維持治療的 Switch maintenance 概念不同。"],
+["試驗","哪個試驗證實對 cisplatin-eligible 的第一線 la/mUC，加入 Nivolumab 能延長 OS？","CheckMate 901",["IMvigor130","KEYNOTE-361","JAVELIN Bladder 100"],"IMvigor130 與 KEYNOTE-361 的化療合併組則被標註為陰性或未達預設門檻。"],
+["試驗","哪個後線試驗是單臂 Phase 2，目標為 Trop-2 ADC，且其適應症後來被撤回？","TROPHY-U-01 (Cohort 1)",["EV-301","DESTINY-PanTumor02","KEYNOTE-045"],"原因是 confirmatory trial TROPiCS-04 未達主要終點。"],
+["族群","ABACUS 與 PURE-01 的收案族群差異為何？","ABACUS 針對 cisplatin-ineligible 或拒絕化療者；PURE-01 為適合 RC 的 MIBC",["兩者皆限 cisplatin-eligible","PURE-01 僅收轉移性病人","ABACUS 僅收 PD-L1 陰性者"],"兩者皆為單臂 Phase 2 術前免疫試驗。"],
+["試驗設計","哪個試驗的設計是 neoadjuvant 與 adjuvant 皆可使用 ddMVAC 對 GC？","VESPER (GETUG-AFU V05)",["POUT","EV-304","AMBASSADOR"],"VESPER 為 Phase 3，可用於術前或術後情境，正向結果主要來自術前亞群。"]
+];
+
+const EX_RCC = [
+["族群","KEYNOTE-564 的收案族群為何？","Nephrectomy 後的 ccRCC，屬 intermediate-high、high risk 或 M1 NED，ECOG PS 0–1",["晚期轉移性 ccRCC 一線","non-clear cell RCC","術前新輔助病人"],"排除曾接受 RCC 全身性治療、活動性自體免疫疾病、殘餘病灶或活動性腦轉移者。"],
+["試驗設計","KEYNOTE-564 的 Primary endpoint 為何？","DFS（investigator-assessed）",["OS","ORR","RFS（BICR）"],"OS 為次要終點，後續 Landmark OS 分析顯示顯著獲益。"],
+["結論","KEYNOTE-564 的長期 OS 分析傳達什麼？","Pembrolizumab 顯著降低死亡風險，確立為高風險 ccRCC 術後標準輔助治療",["OS 無差異，僅 DFS 改善","OS 顯著較差","僅 M1 NED 病人有 OS 獲益"],"NEJM 2024 之 Landmark OS Analysis。"],
+["試驗設計","LITESPARK-022 的 Primary endpoint 與對照組為何？","Primary 為 DFS；對照組為 Pembrolizumab + Placebo",["Primary 為 OS；對照為單純觀察","Primary 為 PFS；對照為 Sunitinib","Primary 為 RFS；對照為 Nivolumab"],"期中 OS 分析資料尚未成熟。"],
+["族群","LITESPARK-022 排除條件中，為何特別提到缺氧或明顯肺部疾病？","因為 HIF-2α 抑制劑（Belzutifan）有缺氧相關風險",["因為 Pembrolizumab 會造成肺栓塞","因為 Placebo 會造成缺氧","因為手術會損傷肺"],"另排除曾接受 RCC 全身性治療與活動性自體免疫疾病者。"],
+["結論","LITESPARK-022 的意義為何？","證實在輔助 PD-1 抑制劑基礎上加入 HIF-2α 抑制劑，可進一步降低復發風險",["證實 HIF-2α 抑制劑單用即可取代 Pembrolizumab","證實加入 Belzutifan 增加復發","為陰性試驗"],"開創輔助治療「標靶＋免疫」聯合方案的新標竿。"],
+["劑量","IMmotion010 的輔助 Atezolizumab 給藥為何？","1200 mg IV Q3W，共 16 個療程（約 1 年）",["200 mg IV Q3W，共 17 個療程","240 mg IV Q2W，共 12 劑","400 mg IV Q6W，最多 9 劑"],"對照為 Placebo。"],
+["族群","IMmotion010 的組織型態收案有何特色？","含 clear cell 或 sarcomatoid 成分的 RCC",["僅限 papillary","僅限 chromophobe","僅限 translocation RCC"],"排除殘餘腫瘤或手術切緣陽性者。"],
+["結論","IMmotion010 的 biomarker 分析結果為何？","未能找出任何具統計顯著 DFS 獲益的亞群",["PD-L1 高者顯著獲益","M1 NED 者顯著獲益","所有亞群皆顯著獲益"],"此為陰性試驗。"],
+["族群","PROSPER RCC (EA8143) 的收案條件為何？","Clinical stage ≥T2 或 any T N+ 的 clear cell 或 non-clear cell RCC，計畫接受手術，ECOG PS 0–1",["僅 pT1 腫瘤","僅轉移性 mRCC","僅 ccRCC 且術後 NED"],"遠端轉移疾病（M1 NED 除外）與活動性自體免疫疾病為排除條件。"],
+["結論","PROSPER RCC 因無效提前終止，作者推測可能原因為何？","單次術前 Nivolumab 可能不足以引發足夠的抗腫瘤 T 細胞反應",["Nivolumab 劑量過高","手術時機太晚","病人過度年輕"],"PROSPER 為首創「術前單次劑量＋術後輔助」的圍手術期設計。"],
+["結論","PROSPER RCC 的亞群分析（clear cell vs. non-clear cell、PD-L1）結果為何？","皆未顯示一致獲益",["clear cell 亞群顯著獲益","PD-L1 高表現者顯著獲益","non-clear cell 亞群顯著獲益"],"試驗 Primary endpoint 為 RFS。"],
+["族群","RAMPART 的收案條件為何？","手術完全切除之 clear cell 或 non-clear cell RCC，Leibovich risk score 3–11",["僅限 Leibovich score 0–2","僅限 M1 疾病","僅限 clear cell RCC 的 IMDC Favorable-risk"],"排除曾接受 RCC 全身性治療及殘餘病灶或遠端轉移證據者。"],
+["結論","RAMPART 的結論為何？","Durvalumab 單藥或 Durvalumab + Tremelimumab 皆未較 Active Surveillance 顯著改善 DFS／OS",["Durvalumab + Tremelimumab 顯著改善 DFS","Durvalumab 單藥顯著改善 OS","三組完全沒有收案"],"確認抗 PD-L1 為基礎的方案未能再現 KEYNOTE-564 的療效。"],
+["結論","RAMPART 的規模與設計特色為何？","是規模最大的多臂輔助試驗之一，評估 PD-L1 及 PD-L1 + CTLA-4 雙免疫",["是單臂小型 Phase 2","僅有兩組、僅評估 TKI","是 nccRCC 專屬試驗"],"Arm A 為 Active Surveillance、Arm B 為 Durvalumab、Arm C 為 Durvalumab + Tremelimumab。"],
+["族群","CheckMate 914 的高風險收案條件為何？","Nephrectomy 切緣陰性的 ccRCC，pT2 G3–4、pT3–T4 any G，或 N1 M0",["IMDC Favorable-risk 轉移性疾病","non-clear cell RCC","M1 且有殘餘病灶"],"殘餘腫瘤或遠端轉移（M1 NED 除外）為排除條件。"],
+["劑量","CheckMate 914 Part B 的 Nivolumab 給藥為何？","240 mg Q2W 共 12 週，之後改 480 mg Q4W 滿 1 年",["3 mg/kg Q3W 共 4 劑","200 mg Q3W 共 17 個療程","1200 mg Q3W 共 16 個療程"],"Part B 為 Nivolumab 單藥 vs. Placebo。"],
+["試驗設計","CheckMate 914 的 Primary endpoint 為何？","DFS（BICR）",["OS","ORR","PFS2"],"Part A 與 Part B 皆未達顯著，OS 分析也未顯示獲益。"],
+["劑量","CheckMate 214 對照組 Sunitinib 的給藥為何？","50 mg PO QD，4 週服藥／2 週停藥（6 週為一週期）",["20 mg PO QD 連續服用","10 mg PO QD 連續服用","60 mg PO QD 連續服用"],"CheckMate 214 實驗組為 Nivolumab + Ipilimumab。"],
+["結論","CheckMate 214 的臨床意義為何？","確立雙免疫為一線 mRCC 樞紐地位，在 IMDC Intermediate/Poor 族群展現長尾效應與高 CR 率",["證實 TKI 單藥仍優於所有免疫治療","證實雙免疫僅適用於 Favorable-risk","證實雙免疫無 CR"],"改變了過去由 TKI 單藥壟斷的治療格局。"],
+["族群","CheckMate 214 何者為排除條件？","活動性腦轉移、需全身性類固醇之自體免疫疾病、曾接受 CPI 或 anti-VEGF 標靶藥物",["KPS ≥ 70%","可測量病灶","clear-cell RCC"],"收案為未曾治療的晚期 clear-cell RCC。"],
+["結論","CheckMate 214 的 5 年追蹤傳達什麼？","達完全緩解的病人觀察到持久反應，雙免疫的存活獲益持續",["獲益於 5 年內消失","僅對 Favorable-risk 持續","完全緩解者很快復發"],"ASCO GU 之 5 年追蹤更新。"],
+["試驗設計","KEYNOTE-426 的 Dual primary endpoint 與分析族群為何？","OS 與 PFS（ITT 族群）",["ORR 與 DoR（Poor-risk）","DFS 與 OS","PFS（BICR）與 pCR"],"對照組為 Sunitinib。"],
+["族群","KEYNOTE-426 的收案與排除條件為何？","新診斷或復發之 stage IV clear-cell RCC、未曾接受轉移性疾病全身治療；排除活動性自體免疫疾病、未治療 CNS 轉移與未控制高血壓",["僅限 non-clear cell","需曾接受 Sunitinib","排除所有 KPS 80% 以上者"],"KPS ≥ 70%，可測量病灶。"],
+["結論","KEYNOTE-426 的意義為何？","首個證明 anti-PD-1 + TKI 在 OS 與 PFS 皆優於 Sunitinib 的 Phase 3，適用全風險族群",["首個證實雙免疫優於 Sunitinib","僅適用於 Poor-risk","證實 TKI 單藥優於合併"],"使 Pembrolizumab + Axitinib 成為全風險族群一線首選之一。"],
+["機轉","CheckMate 9ER 使用的 Cabozantinib 具哪些標靶？","MET、VEGFR 與 AXL",["僅 mTOR","HIF-2α","PD-1 與 CTLA-4"],"Cabozantinib 為強效廣譜 TKI。"],
+["試驗設計","CheckMate 9ER 的 Primary endpoint 與收案範圍為何？","PFS（BICR）；先前未治療晚期 RCC（含 clear-cell 成分），所有 IMDC 風險族群",["OS；僅限 Poor-risk","DFS；僅限術後病人","ORR；僅限 non-clear cell"],"排除活動性腦轉移、嚴重腸胃道出血或穿孔風險者。"],
+["劑量","CLEAR 試驗中 Sunitinib 對照組與 Lenvatinib + Everolimus 的劑量為何？","Sunitinib 50 mg QD（4/2）；Lenvatinib 18 mg + Everolimus 5 mg QD",["Sunitinib 20 mg；Lenvatinib 8 mg + Everolimus 10 mg","Sunitinib 50 mg QD 連續；Lenvatinib 24 mg + Everolimus 2.5 mg","Sunitinib 37.5 mg；Lenvatinib 14 mg + Everolimus 7.5 mg"],"Arm A Lenvatinib 20 mg + Pembrolizumab 200 mg Q3W 為主要比較。"],
+["試驗設計","CLEAR 的 Primary endpoint 與主要比較組別為何？","PFS（BICR）；Arm A（Lenvatinib + Pembro）vs. Arm C（Sunitinib）",["OS；Arm B vs. Arm C","ORR；Arm A vs. Arm B","DFS；Arm A vs. Arm C"],"OS 次要分析 HR 亦達統計顯著。"],
+["結論","CLEAR 的長期追蹤對風險族群的傳達為何？","各 MSKCC/IMDC 風險族群的 PFS 優勢與存活獲益方向一致",["僅 Favorable-risk 獲益","僅 Poor-risk 獲益","各風險族群結果互相矛盾"],"ASCO 2023/2024 的 4 年追蹤。"],
+["族群","JAVELIN Renal 101 的收案與分層有何特色？","未治療之晚期 clear-cell RCC，依 PD-L1 狀態分層，ECOG PS 0–1",["僅 PD-L1 陰性者","non-clear cell","需曾接受 anti-VEGF"],"Co-primary 為 PD-L1 陽性族群 PFS 與 OS。"],
+["結論","JAVELIN Renal 101 的歷史意義為何？","第一個獲 FDA 批准的 anti-PD-L1 + TKI 一線組合，但 OS 未顯著，指南推薦層級略低",["證實 OS 顯著優於所有 IO + TKI","證實 PFS 無改善","因毒性撤回所有適應症"],"最終分析確認長期 PFS 獲益與持久反應。"],
+["劑量","COSMIC-313 三聯組的 Cabozantinib 與 Nivolumab／Ipilimumab 劑量為何？","Cabozantinib 40 mg QD + Nivolumab 3 mg/kg + Ipilimumab 1 mg/kg Q3W（4 劑），之後 Nivolumab 480 mg Q4W",["Cabozantinib 60 mg QD + Nivolumab 240 mg Q2W","Cabozantinib 20 mg QD + Pembrolizumab 200 mg Q3W","Cabozantinib 40 mg QD + Avelumab 10 mg/kg Q2W"],"對照組為 Placebo + Nivolumab + Ipilimumab。"],
+["試驗設計","COSMIC-313 的 Primary endpoint 分析族群與 OS 角色為何？","PFS（前 550 名隨機分配病人，PIRC 評估）；OS（ITT）為次要終點",["OS 為 Primary；PFS 為次要","ORR 為 Primary","DFS 為 Primary"],"最終結果為 OS 無差異。"],
+["試驗設計","PDIGREE 的 Primary endpoint 為何？","隨機分派之 Non-CR/Non-PD 病人的 3 年 OS rate",["所有病人的 PFS","ORR（BICR）","DFS"],"PDIGREE 目前仍在等待長期存活事件成熟（ONGOING）。"],
+["族群","PDIGREE 與 COSMIC-313 在收案風險族群上有何共同點？","皆限 IMDC Intermediate 或 Poor risk 的 clear-cell RCC",["皆限 IMDC Favorable-risk","皆限 non-clear cell","皆不限風險"],"兩者皆探討 Nivolumab + Ipilimumab 之外是否加 Cabozantinib。"],
+["試驗設計","LITESPARK-005 的 Dual primary endpoints 為何？","PFS 與 OS",["ORR 與 DoR","DFS 與 EFS","pCR 與 MFS"],"PFS 達顯著；OS 趨勢有利但未達顯著門檻。"],
+["結論","Belzutifan 在 LITESPARK-005 的主要毒性為何？","貧血與缺氧",["心臟毒性與肺纖維化","周邊神經病變與落髮","骨折與癲癇"],"真實世界研究確認其安全性可控。"],
+["族群","LITESPARK-011 的收案族群為何？","先前接受 anti-PD-1/PD-L1 後惡化的晚期 ccRCC（2L），依 TKI-naïve 或最多 1 種 TKI 分層",["未治療之 1L","僅 non-clear cell","僅術後病人"],"排除曾接受 HIF-2α 抑制劑與活動性 CNS 轉移者。"],
+["劑量","LITESPARK-011 對照組的 Cabozantinib 劑量為何？","60 mg PO QD",["20 mg PO QD","10 mg PO QD","120 mg PO QD"],"實驗組為 Belzutifan 120 mg QD + Lenvatinib 20 mg QD。"],
+["結論","LITESPARK-011 的 FDA／PDUFA 法規進度為何？","法規審查決議預計於 2026 年底公布",["已於 2024 年核准","已於 2025 年撤回","尚未提出申請"],"資料指出這是 2026 年發表的重磅試驗。"],
+["族群","LITESPARK-012 的收案族群為何？","先前未治療（1L）的晚期 clear-cell RCC，所有 IMDC 風險族群",["post-IO 的 2L","non-clear cell","術後輔助"],"排除曾接受 mRCC 全身性治療者。"],
+["結論","LITESPARK-012 的意義為何？","在已具強效 IO+TKI 基礎上疊加 HIF-2α 抑制劑或 CTLA-4 藥物，未帶來實質存活突破",["三聯顯著勝出","證實三聯毒性較低","證實 CTLA-4 抑制劑單用即可"],"提示三聯療法在一線未經篩選病人中的侷限性。"],
+["族群","CONTACT-03 的收案與排除條件為何？","於先前 ICI 治療期間或之後惡化的晚期 RCC（ccRCC 或 non-ccRCC）；排除因嚴重免疫相關不良事件停用先前 ICI 者",["未治療的 1L ccRCC","僅術後輔助病人","僅 non-clear cell 且未曾接受 ICI"],"此試驗翻轉了「ICI re-challenge」的臨床觀念。"],
+["劑量","CONTACT-03 的實驗組與對照組為何？","Atezolizumab 1200 mg Q3W + Cabozantinib 60 mg QD vs. Cabozantinib 60 mg QD",["Nivolumab + Ipilimumab vs. Cabozantinib","Belzutifan vs. Everolimus","Tivozanib + Nivolumab vs. Tivozanib"],"合併組 Grade 3/4 不良事件顯著較高。"],
+["族群","TiNIVO-2 的收案族群與 Primary endpoint 為何？","晚期 ccRCC，先前接受 1 或 2 線治療（含 PD-1/PD-L1 抑制劑）後惡化；Primary 為 PFS",["未治療 1L ccRCC；Primary 為 OS","術後輔助；Primary 為 DFS","non-clear cell；Primary 為 ORR"],"排除曾接受 Tivozanib 者。"],
+["結論","TiNIVO-2 與 CONTACT-03 合起來傳達什麼？","Post-IO 後再加入 PD-1/PD-L1 抑制劑並無協同效益，後線策略轉向非免疫機轉",["Post-IO 再挑戰是最佳策略","僅 Tivozanib 單藥無效","TKI 在後線完全無用"],"如 HIF-2α + TKI 的方向。"],
+["族群","METEOR 的收案條件為何？","晚期 ccRCC，於至少 1 種 VEGFR-TKI 治療後疾病惡化",["未曾治療 1L","曾接受 Everolimus 或 Cabozantinib","僅 non-clear cell"],"METEOR 為 Cabozantinib vs. Everolimus 的二線 Phase 3。"],
+["結論","METEOR 的亞群觀察為何促成後續研究？","Cabozantinib 對骨轉移控制優異，為 RADICAL 等試驗奠定理論基礎",["Cabozantinib 對骨轉移無效","Everolimus 對骨轉移較佳","骨轉移與預後無關"],"METEOR 同時顯示 PFS、OS 與 ORR 皆優於 Everolimus。"],
+["試驗設計","LITESPARK-003 的 Cohort 1 與 Cohort 2 差異為何？","Cohort 1 為 1L 未治療；Cohort 2 為曾治療（2L+，post-IO/TKI）",["Cohort 1 為術後輔助；Cohort 2 為 1L","兩個 cohort 皆為 1L","Cohort 1 為 non-clear；Cohort 2 為 clear"],"皆使用 Belzutifan 120 mg QD + Cabozantinib 60 mg QD。"],
+["結論","LITESPARK-003 為何受矚目？","首個驗證「HIF-2α 抑制劑＋TKI」全標靶無免疫組合的先驅試驗，一線緩解率與 PFS 表現亮眼",["證實 Belzutifan 無效","為輔助治療試驗","為 Phase 3 隨機試驗"],"為 LITESPARK-011 等 Phase 3 鋪路。"],
+["族群","RADICAL (Alliance A031801) 的收案條件為何？","轉移性 RCC（ccRCC 或 non-ccRCC），至少 1 處活動性、有症狀、未曾放療的骨轉移，KPS ≥ 60%",["無骨轉移的 1L ccRCC","術後輔助病人","僅腦轉移病人"],"排除曾接受骨標靶放射性藥物（如 Radium-223）者。"],
+["劑量","RADICAL 實驗組的 Cabozantinib 劑量安排為何？","40 mg 依耐受性逐步增量至 60 mg QD，併用 Radium-223",["固定 20 mg QD","固定 120 mg QD","不使用 Cabozantinib"],"對照組為 Cabozantinib 60 mg QD 單藥。"],
+["結論","RADICAL 的結果解讀為何？","SSE-FS 未達標，且 Cabozantinib 單藥本身即為骨轉移的強效治療骨幹",["Radium-223 顯著降低骨骼事件","Cabozantinib 單藥完全無效","試驗因毒性提前停止"],"次要終點 OS 的曲線分離為探索性觀察。"],
+["試驗設計","ESPN 的 Primary endpoint 與病人族群為何？","一線治療的 PFS；未曾治療的轉移性 non-clear cell RCC",["OS；ccRCC","DFS；術後輔助","ORR；pRCC 二線"],"收案包含 papillary、chromophobe、unclassified、translocation RCC。"],
+["結論","ESPN 與 ASPEN 合起來傳達什麼？","在 nccRCC 一線，抗 VEGF（Sunitinib）通常優於單獨阻斷 mTOR（Everolimus）",["mTOR 抑制劑優於 TKI","兩者完全等效","免疫治療優於 TKI"],"兩項皆為 Phase 2。"],
+["結論","ASPEN 的亞群分析傳達什麼？","Sunitinib 在 Good/Intermediate risk 與 papillary/chromophobe 優勢明顯；Everolimus 於 Poor risk 呈輕度效益",["Everolimus 在所有亞群皆優","Sunitinib 在 Poor risk 優勢最大","亞群之間無任何差異"],"ASPEN 的 Primary endpoint 為 PFS。"],
+["族群","SAVOIR 的收案族群為何？","MET 驅動型乳頭狀 RCC（經中央 DNA 定序/copy number 分析確認），未曾接受晚期疾病治療",["ccRCC 的 1L","non-clear cell 且 MET 陰性","術後輔助病人"],"排除 MET 陰性 PRCC 或曾接受 MET 抑制劑／VEGF-TKI 者。"],
+["結論","SAVOIR 為何被視為精準醫學概念驗證？","因 Savolitinib 相較 Sunitinib 帶來較高 ORR 與明顯較佳耐受性，但因招募受限提前終止",["因為完全達到統計顯著並獲批","因為毒性高於 Sunitinib","因為只做動物實驗"],"此正向趨勢支持後續合併治療研究（如 SAMETA）。"],
+["試驗設計","PAPMET (SWOG S1500) 的四個治療組為何？","Sunitinib、Cabozantinib、Crizotinib、Savolitinib",["Nivolumab、Ipilimumab、Pembrolizumab、Axitinib","Belzutifan、Everolimus、Lenvatinib、Sunitinib","Durvalumab、Savolitinib、Sunitinib、Atezolizumab"],"Crizotinib 因無效提前終止；Savolitinib 於未篩選族群因無效提前終止。"],
+["族群","PAPMET 的收案條件為何？","轉移性乳頭狀 RCC（Type 1 及 Type 2），先前接受 ≤ 1 線全身治療（不含 VEGF-TKI/MET 抑制劑）",["僅純 clear cell RCC","需曾接受 ≥ 3 線治療","僅 chromophobe"],"Primary endpoint 為 PFS。"],
+["試驗設計","KEYNOTE-B61 的試驗設計與 Primary endpoint 為何？","單臂 Phase 2；Primary 為 ORR（RECIST v1.1，BICR）",["隨機 Phase 3；Primary 為 OS","雙盲 Phase 3；Primary 為 DFS","隨機 Phase 2；Primary 為 PFS"],"收案為 1L nccRCC，ECOG PS 0–2。"],
+["族群","KEYNOTE-B61 涵蓋哪些 nccRCC 亞型？","papillary、chromophobe、unclassified、translocation、renal medullary carcinoma",["僅 papillary","僅 clear cell","僅 sarcomatoid"],"結果顯示各亞型反應率方向一致。"],
+["試驗設計","CheckMate 920 Cohort 1 的 Primary endpoints 為何？","安全性與 investigator-assessed ORR",["OS 與 PFS","DFS","pCR"],"收案為 1L 晚期 nccRCC，ECOG PS 0–2。"],
+["試驗設計","SUNNIFORCAST 的對照組與 Primary endpoint 為何？","對照為 SOC TKI（主要為 Sunitinib）；Primary 為 12 個月 OS rate",["對照為安慰劑；Primary 為 DFS","對照為 Everolimus；Primary 為 PFS","對照為觀察；Primary 為 pCR"],"其意義為首個在 1L nccRCC 的前瞻性隨機試驗中，顯示雙免疫優於 TKI 的存活獲益。"],
+["試驗","SAMETA 的設計理論基礎為何？","早期 CALYPSO 試驗顯示 Savolitinib + Durvalumab 於 MET+ PRCC 有優異緩解率",["Sunitinib 的 Phase 2 結果","Nivolumab + Ipilimumab 於 ccRCC 的結果","Everolimus 的 Phase 3 結果"],"SAMETA 為首個針對 MET 驅動型 PRCC 的全球 Phase 3。"],
+["劑量","SAMETA 實驗組的劑量為何？","Savolitinib 600 mg PO QD + Durvalumab 1500 mg IV Q4W",["Savolitinib 120 mg QD + Durvalumab 200 mg Q3W","Savolitinib 20 mg QD + Durvalumab 1500 mg Q2W","Savolitinib 600 mg QD + Nivolumab 480 mg Q4W"],"其他兩組為 Durvalumab 單藥與 Sunitinib 50 mg QD（4/2）。"],
+["試驗","Cadonilimab（AK104）是什麼藥物？","PD-1/CTLA-4 雙特異性抗體",["HIF-2α 抑制劑","MET 抑制劑","mTOR 抑制劑"],"該試驗併用 Axitinib，為 1L nccRCC 的 Phase 1b/2 單臂研究。"],
+["結論","Cadonilimab + Axitinib 試驗的亮點亞群為何？","FH 缺失型 RCC（FH-dRCC），緩解率特別突出",["Clear cell RCC","Chromophobe","術後 M1 NED"],"RP2D 確認為 10 mg/kg Q3W，且無治療相關死亡。"],
+["試驗","哪個輔助試驗為首個公布結果的抗 PD-L1 輔助試驗且為陰性？","IMmotion010",["KEYNOTE-564","LITESPARK-022","CheckMate 914"],"凸顯 PD-1 與 PD-L1 抑制劑在輔助治療的成敗可能不同。"],
+["試驗","哪個試驗直接證明 post-IO 後「加上 ICI」無益，重點比較 Cabozantinib ± Atezolizumab？","CONTACT-03",["TiNIVO-2","METEOR","LITESPARK-005"],"TiNIVO-2 則是 Tivozanib ± Nivolumab 的對應結果。"],
+["試驗","哪個 1L 試驗使用適應性設計並以 3 年 OS 為 Primary endpoint 的目標？","PDIGREE (Alliance A031704)",["COSMIC-313","CLEAR","JAVELIN Renal 101"],"PDIGREE 於 2019 年啟動，結果尚待成熟。"]
+];
+
+const EX_PROSTATE = [
+["試驗設計","CHAARTED 的 Primary endpoint 與對照組為何？","OS；對照為 ADT alone",["rPFS；對照為 ADT + Placebo","MFS；對照為 Docetaxel 單藥","PSA 反應率；對照為 Mitoxantrone"],"CHAARTED 為 ADT ± Docetaxel 的 Phase 3。"],
+["族群","CHAARTED 的收案族群為何？","mCSPC / mHSPC 男性，ECOG PS 0–2，並依腫瘤負擔分層",["nmCRPC","mCRPC post-docetaxel","局部高風險 PCa"],"分為 High-volume 與 Low-volume。"],
+["結論","CHAARTED 在前列腺癌治療史上的意義為何？","首度證實早期化療聯合去勢治療能顯著延長 mCSPC 的 OS，並開創腫瘤負擔分層觀念",["證實化療對 mCSPC 無效","證實 ARPI 優於化療","證實 PARP 抑制劑有效"],"2018 JCO 長期追蹤確認 high-volume 疾病的 OS 獲益。"],
+["劑量","LATITUDE 實驗組的劑量為何？","Abiraterone 1000 mg PO QD + Prednisone 5 mg PO QD + ADT",["Abiraterone 250 mg QD 空腹","Enzalutamide 160 mg QD","Apalutamide 240 mg QD"],"對照組為 ADT + Dual Placebo。"],
+["結論","LATITUDE 的意義為何？","確立 Abiraterone + ADT 於初診斷高風險 de novo mCSPC 的第一線標準地位，並定義 LATITUDE High-Risk 標準",["證實 Abiraterone 對 mCSPC 無效","證實必須合併 Docetaxel","為 nmCRPC 試驗"],"Final OS analysis 發表於 Lancet Oncology（2019）。"],
+["試驗設計","LATITUDE 的 Co-primary endpoints 為何？","OS 與 rPFS",["MFS 與 PSA 反應率","pCR 與 MFS","ORR 與 DoR"],"最終分析證實死亡風險持續降低，並支持安慰劑組 crossover 解盲。"],
+["族群","STAMPEDE 的收案族群為何？","新診斷 M1 轉移性前列腺癌，或高風險 N1/M0，或高風險復發疾病，ECOG PS 0–2",["僅 nmCRPC","僅 mCRPC post-docetaxel","僅 PSMA 陽性者"],"排除曾接受前列腺癌全身治療者（≤ 12 週前開始之 ADT 除外）。"],
+["試驗設計","STAMPEDE 的對照組（SOC）為何？","ADT ≥ 2 年（M0 病人可併局部放療）",["單純觀察","ADT + Docetaxel","ADT + Abiraterone"],"STAMPEDE 為 Phase 2/3 MAMS 平台試驗。"],
+["結論","STAMPEDE 的長期多臂比較與後續延伸為何？","確認 Docetaxel 與 Abiraterone 皆有持久 OS 優勢，並促成低腫瘤負擔 M1 原發腫瘤放療的測試（Arm H）",["兩者皆無 OS 獲益","僅 Docetaxel 有效","促成 PARP 抑制劑試驗"],"STAMPEDE 以大型獨立族群二次驗證 Docetaxel 效益。"],
+["族群","ENZAMET 何者為排除條件？","曾使用第二代抗雄性素藥物或 Abiraterone、有癲癇病史或易誘發癲癇之疾患",["ECOG PS 0","mCSPC 男性","曾使用第一代 NSAA 者"],"Enzalutamide 160 mg PO QD 為實驗組。"],
+["結論","ENZAMET 的最終分析傳達什麼？","Enzalutamide 具持久 OS 獲益，尤其於低腫瘤負擔或未併用 Docetaxel 的病人",["僅併用 Docetaxel 者獲益","僅 high-volume 獲益","OS 無獲益"],"Final OS analysis 於 Lancet Oncology 2023 發表，追蹤約 5.7 年。"],
+["劑量","ENZAMET 中「早期 Docetaxel」如何安排？","由醫師決定是否併用，75 mg/m² q3w × 6 個療程",["必須全部病人使用","僅術後使用","每週 25 mg/m²"],"約近一半病人接受。"],
+["族群","ARCHES 的收案條件為何？","病理確診 mCSPC（不分高低腫瘤負擔、可有或無先前 Docetaxel），ECOG PS 0–1",["僅 high-volume","僅曾接受 Abiraterone 者","nmCRPC"],"排除 ADT 治療中疾病惡化、ADT 前曾用 ARPI 或化療（允許之 docetaxel 除外）、癲癇病史。"],
+["結論","ARCHES 的 Final OS 分析有何特別解讀重點？","儘管不少安慰劑組病人轉換至 Enzalutamide，仍顯示 OS 顯著獲益",["交叉使用完全不存在","OS 為陰性","Enzalutamide 組存活較差"],"Primary endpoint 為 rPFS。"],
+["試驗設計","ARCHES 的對照組為何？","ADT + Placebo",["ADT + NSAA","ADT + Docetaxel","單純觀察"],"實驗組為 Enzalutamide 160 mg QD + ADT。"],
+["族群","TITAN 的收案條件為何？","mCSPC 男性，不限疾病範圍（高或低腫瘤負擔），ECOG PS 0–1，允許先前 ≤ 6 個療程 Docetaxel",["僅 high-volume","必須曾接受 Abiraterone","僅 nmCRPC"],"排除嚴重心臟功能不全、活動性腦轉移、癲癇病史或易誘發癲癇因子。"],
+["結論","TITAN 的臨床意義為何？","確立 Apalutamide 於 mCSPC 的標準治療地位，且生活品質維持良好",["證實 Apalutamide 優於 Docetaxel","證實 Apalutamide 增加死亡","僅適用 nmCRPC"],"Final OS analysis 於 JCO 2021 發表。"],
+["試驗設計","PEACE-1 共有哪四個治療組合？","SOC／SOC + Abiraterone／SOC + RT／SOC + Abiraterone + RT",["Placebo／Enzalutamide／Apalutamide／Darolutamide","ADT／Docetaxel／Cabazitaxel／Radium","ADT + PARPi／ADT + ARPI 等四組"],"SOC 為 ADT alone 或 ADT + Docetaxel；關鍵比較為三聯 vs. 雙聯。"],
+["劑量","PEACE-1 中 Abiraterone 與 Docetaxel 的劑量為何？","Abiraterone 1000 mg + Prednisone 5 mg QD；Docetaxel 75 mg/m² q3w × 6 個療程",["Abiraterone 250 mg；Docetaxel 25 mg/m² 每週","Abiraterone 500 mg BID；Docetaxel 100 mg/m²","Abiraterone 1000 mg；Docetaxel 75 mg/m² 共 12 個療程"],"PEACE-1 為 2×2 factorial design。"],
+["結論","PEACE-1 的後續分析顯示三聯對何種事件有影響？","顯著降低去勢抗性發生率，且未增加不可控之嚴重毒性",["增加去勢抗性發生","無任何影響","增加不可控毒性"],"PEACE-1 於 de novo 高腫瘤負擔 mCSPC 確立三聯強化。"],
+["族群","ARASENS 的收案族群為何？","新診斷 mCSPC，適合接受 Docetaxel，ECOG PS 0–1",["nmCRPC","post-ARTA mCRPC","HRR 突變 mCRPC"],"排除隨機前曾用 ADT > 12 週、曾用第二代 ARPI 或前列腺癌化療者。"],
+["結論","ARASENS 的亞組分析傳達什麼？","高、低腫瘤負擔及高、低風險族群皆有一致的 OS 獲益",["僅 low-volume 獲益","僅 high-risk 獲益","亞組結果互相矛盾"],"2023 年 ASCO GU／JCO。"],
+["族群","TALAPRO-3 的收案條件為何？","帶有前瞻性檢出之 HRR 基因變異（BRCA1/2、ATM、PALB2、CDK12 等）的 mCSPC 男性，ECOG PS 0–1",["未篩選 HRR 的 all-comers","nmCRPC","PSMA 陽性 mCRPC"],"排除 mCSPC 階段曾用 Docetaxel、曾接觸 ARPI 或曾接受 PARP 抑制劑者。"],
+["結論","TALAPRO-3 的重要意義為何？","首個證實 PARP 抑制劑 + ARPI 於 HRR 突變 mCSPC 可顯著控制影像進展，將精準基因檢測前移至 mCSPC 第一線",["證實 PARP 抑制劑於 mCSPC 無效","證實僅 BRCA 野生型獲益","為 nmCRPC 試驗"],"BRCA 突變亞群獲益更明顯；OS 呈鼓舞的趨勢。"],
+["試驗設計","SPARTAN 的隨機比例與 Primary endpoint 為何？","Apalutamide 組：Placebo 組 = 2:1；Primary 為 MFS",["1:1；Primary 為 OS","3:1；Primary 為 rPFS","2:1；Primary 為 PSA 反應率"],"MFS 定義為隨機至影像首次發現遠端轉移或任何原因死亡。"],
+["族群","SPARTAN 何者為排除條件？","遠端轉移、癲癇病史或易誘發癲癇之疾患、曾用第二代抗雄性素藥物或化療",["PSADT ≤ 10 個月","睪固酮 < 50 ng/dL","ECOG PS 0–1"],"收案為高轉移風險 nmCRPC。"],
+["劑量","SPARTAN 的 Apalutamide 劑量與型態為何？","240 mg PO QD（4 × 60 mg 錠劑）",["160 mg PO QD","600 mg PO BID","1000 mg PO QD"],"連續每日給藥，直至失敗、毒性或出現遠端轉移。"],
+["結論","SPARTAN 最終 OS 分析如何解讀？","儘管對照組部分交叉與高比例後續延命治療，仍顯示顯著 OS 改善",["OS 無差異","OS 顯著較差","OS 未分析"],"最終分析發表於 Annals of Oncology 2021。"],
+["結論","PROSPER 的安全性需留意什麼？","疲倦、高血壓、心血管事件及跌倒，癲癇發生率低但存在",["完全沒有不良事件","主要為皮疹與甲狀腺低能","主要為骨髓抑制"],"PROSPER 的 Primary endpoint 為 MFS。"],
+["結論","PROSPER 傳達的存活意義為何？","早期延緩轉移能轉換為長期存活獲益，最終分析顯示顯著 OS 改善",["MFS 改善但 OS 無改善","OS 較差","未分析 OS"],"Enzalutamide 由 mCRPC 前移至 nmCRPC。"],
+["族群","ARAMIS 的收案與排除條件為何？","影像確認無遠端轉移的 nmCRPC，PSADT ≤ 10 個月；排除曾用第二代 AR 拮抗劑或 PARP 抑制劑者",["必須有骨轉移","PSADT ≥ 24 個月","必須接受過化療"],"除非嚴重或未受控，癲癇或心臟病史病人並未自動排除。"],
+["結論","ARAMIS 的主要特色為何？","Darolutamide 中樞神經副作用與安慰劑幾乎無異，同時證實存活獲益",["中樞神經毒性最高","必須合併類固醇","OS 無獲益"],"Final OS analysis 發表於 NEJM 2020。"],
+["族群","TROPIC 的收案條件與排除條件為何？","含 Docetaxel 療程中或之後惡化的 mCRPC；排除曾接受 Mitoxantrone、≥ Grade 2 周邊神經病變者",["未曾化療的 mCRPC","nmCRPC","mCSPC"],"ECOG PS 0–2。"],
+["結論","TROPIC 的意義為何？","第一個證實 Docetaxel 失敗後使用 Cabazitaxel 可延長 OS 的 Phase 3，奠定後線化療地位",["證實 Cabazitaxel 無效","為第一線試驗","為 PSMA 試驗"],"PROSELICA 後續證實 20 mg/m² 不劣於 25 mg/m² 且毒性較低。"],
+["試驗設計","COU-AA-301 的 Primary endpoint 與對照為何？","OS；對照為 Placebo + Prednisone（2:1）",["rPFS；對照為 Mitoxantrone","MFS；對照為 ADT","PSA 反應率；對照為 Docetaxel"],"Abiraterone 1000 mg QD（4 × 250 mg，空腹）+ Prednisone 5 mg BID。"],
+["族群","COU-AA-301 何者為排除條件？","曾用 Ketoconazole > 7 天、嚴重心臟功能不全、活動性 CNS 轉移",["內臟轉移","ECOG PS ≤ 2","曾用 Docetaxel"],"內臟器官轉移初期為可納入。"],
+["劑量","COU-AA-302 的 Abiraterone 與 Prednisone 劑量為何？","Abiraterone 1000 mg QD + Prednisone 5 mg BID（兩組皆用 Prednisone）",["Abiraterone 250 mg QD 無類固醇","Abiraterone 500 mg BID","Abiraterone 1000 mg + Prednisone 20 mg"],"對照為 Placebo + Prednisone。"],
+["結論","COU-AA-302 的 Final OS 如何解讀？","儘管對照組不少人交叉使用至 Abiraterone，仍顯示統計顯著 OS 改善",["OS 無差異","OS 顯著較差","未收集 OS"],"其意義為將 ARTA 前移至第一線未化療 mCRPC。"],
+["族群","AFFIRM 的收案條件為何？","1 或 2 種化療（至少一種含 Docetaxel）後惡化的 mCRPC，睪固酮 < 50 ng/dL，ECOG PS 0–2",["未曾化療","nmCRPC","PSMA PET 陽性"],"排除癲癇病史、腦轉移或易誘發癲癇之疾患。"],
+["結論","AFFIRM 的特色之一為何？","不需強制合併類固醇，且 QoL 評估顯示健康相關生活品質改善",["必須合併高劑量類固醇","生活品質明顯惡化","癲癇發生率極高"],"癲癇發生率低。"],
+["劑量","PREVAIL 的 Enzalutamide 劑量與對照為何？","160 mg PO QD；對照為 Placebo（1:1）",["80 mg PO QD；對照為 Abiraterone","240 mg QD；對照為 Docetaxel","160 mg QD；對照為 Cabazitaxel"],"持續至疾病惡化或開始化療／試驗用藥。"],
+["結論","PREVAIL 顯示 Enzalutamide 對化療時機有何影響？","大幅延緩開始化療的時間",["提早開始化療","與化療時機無關","必須同時化療"],"其 Co-primary 為 rPFS 與 OS。"],
+["結論","ALSYMPCA 的意義為何？","首個證實骨轉移專一性 Alpha 靶向藥物可延長 mCRPC OS 並降低骨骼相關事件的試驗",["首個證實 PARP 抑制劑有效的試驗","首個比較 ARTA 的試驗","首個 PSMA PET 試驗"],"Radium-223 (Xofigo) 適用於僅有骨轉移的病人。"],
+["族群","ALSYMPCA 何者為排除條件？","內臟轉移、惡性淋巴結腫大短軸 > 3 cm、血友病或嚴重血球低下病史",["≥ 2 處骨轉移","曾接受 Docetaxel","症狀性 CRPC"],"收案為症狀性 CRPC、≥ 2 處骨轉移、無已知內臟轉移。"],
+["試驗設計","ALSYMPCA 的 Best Standard of Care 允許何者？","局部放療、糖皮質激素、抗雄性素藥物、Ketoconazole 等（Abiraterone/Enzalutamide 不可併用）",["必須併用 Abiraterone","必須併用 Enzalutamide","禁止任何放療"],"實驗組為 Radium-223 + BSOC，隨機比例 2:1。"],
+["族群","CARD 的收案條件為何？","曾接受 Docetaxel，且在先前 Abiraterone 或 Enzalutamide 治療 12 個月內惡化的 mCRPC，ECOG PS 0–2",["未曾化療的 mCRPC","nmCRPC","需曾接受 Cabazitaxel"],"排除曾接受 Cabazitaxel 或曾用過 Abiraterone 與 Enzalutamide 兩者者。"],
+["結論","CARD 對後線治療順序的啟示為何？","Docetaxel 及一種 ARTA 失效後，換用化療 Cabazitaxel 優於換用另一種 ARTA",["換用另一種 ARTA 優於 Cabazitaxel","兩者完全相同","應改用 Radium-223"],"PRO 亦顯示 Cabazitaxel 的疼痛反應與生活品質保存較佳。"],
+["族群","PROfound 的 Cohort B 包含哪些基因？","其他 12 種 HRR 基因（如 BARD1、BRIP1、CDK12、CHEK1/2、PALB2 等）",["BRCA1、BRCA2、ATM","僅 AR","僅 PSMA"],"Primary endpoint 針對 Cohort A。"],
+["結論","PROfound 的意義為何？","開啟前列腺癌精準醫療與 Biomarker 導向時代，奠定基因檢測於晚期前列腺癌的診斷流程",["證實 Olaparib 對所有人有效","證實基因檢測無價值","為 nmCRPC 試驗"],"對照組為 Abiraterone 或 Enzalutamide，約三分之二對照組後來交叉使用 Olaparib。"],
+["族群","VISION 何者為排除條件？","PET/CT 顯示 PSMA 陰性或不一致病灶（如 FDG 陽性／PSMA 陰性）、血清肌酸酐 > 1.5× ULN 或骨髓功能嚴重受損",["PSMA 陽性病灶","曾接受 ARTA","ECOG PS 0–2"],"VISION 收案需 68Ga-PSMA-11 PET/CT 全數病灶 PSMA 陽性。"],
+["結論","177Lu-PSMA-617 的主要毒性為何？","口乾（xerostomia）、疲倦、噁心及骨髓抑制",["視網膜病變與角膜炎","癲癇與認知障礙","重度皮疹與肺炎"],"VISION 的亞組分析顯示療效在不同基線 PSA、疼痛評分、LDH 下一致。"],
+["結論","VISION 的意義為何？","建立「分子影像診斷（PET）＋放射配體治療（RLT）」的診療合一模式，Pluvicto 獲全球批准",["證實 RLT 劣於化療","證實不需 PSMA 篩選","為輔助治療試驗"],"VISION 為 177Lu-PSMA-617 + SOC vs. SOC 的 Phase 3。"],
+["劑量","TheraP 中 177Lu-PSMA-617 的給藥策略為何？","起始 8.5 GBq，每療程遞減 0.5 GBq，每 6 週一次，最多 6 個療程",["固定 7.4 GBq，每 4 週，最多 3 個療程","起始 3 GBq 逐次遞增","每週 1 GBq"],"對照 Cabazitaxel 20 mg/m² q3w，最多 10 個療程。"],
+["族群","TheraP 的雙 PET 篩選條件為何？","68Ga-PSMA-11 高 PSMA 表現（SUVmax ≥ 20）且 18F-FDG PET 無不一致病灶",["僅需骨骼掃描","僅需 FDG 陽性","不需任何 PET"],"收案為 docetaxel 後惡化的 mCRPC。"],
+["結論","TheraP 的安全性結果為何？","177Lu-PSMA-617 的 Grade 3–4 不良事件比例低於 Cabazitaxel",["兩者相同","177Lu-PSMA-617 毒性較高","無不良事件"],"PSA 反應率亦較高。"],
+["劑量","PSMAfore 的 177Lu-PSMA-617 劑量與對照為何？","7.4 GBq IV 每 6 週一次，最多 6 個療程；對照為換用另一種 ARTA",["200 mg PO QD；對照為 Placebo","10 mg/kg；對照為 Docetaxel","50 kBq/kg；對照為 BSC"],"對照：由先前 Abiraterone 換為 Enzalutamide，或反之。"],
+["族群","PSMAfore 何者為排除條件？","mCRPC 階段曾接受化療、PET 顯示不一致無 PSMA 表現之病灶、曾接受 PARP 抑制劑或放射性藥物",["PSMA 陽性","先前一種 ARTA 後惡化","適合換用 ARTA"],"若 (m)HSPC 階段曾用 Docetaxel，須完成逾 12 個月。"],
+["結論","PSMAfore 的 OS 解讀為何？","因對照組高比例交叉至 177Lu-PSMA-617，未調整的 OS 看不出差異；交叉調整後的分析較有利 177Lu-PSMA",["OS 顯著較差","OS 未交叉","交叉調整後仍無差異"],"Primary endpoint 為 rPFS。"],
+["試驗設計","TALAPRO-2 的 Cohort 1 與 Cohort 2 差異為何？","Cohort 1 不依 HRR 狀態篩選（All-comers）；Cohort 2 為前瞻性篩選之 HRR 突變族群",["Cohort 1 為術前；Cohort 2 為術後","Cohort 1 為 mCSPC；Cohort 2 為 nmCRPC","兩個 cohort 完全相同"],"Primary endpoint 為 BICR 評估之 rPFS。"],
+["結論","TALAPRO-2 最常見的 Grade 3–4 不良事件為何？","貧血",["癲癇","皮疹","視網膜病變"],"透過劑量調整與輸血管理，未致高比例治療中斷。"],
+["結論","TALAPRO-2 的臨床意義為何？","證實 PARP 抑制劑 + AR 阻斷劑於 1L mCRPC 的協同效應，BRCA 突變者獲益尤其顯著",["證實僅 BRCA 野生型獲益","證實 PARPi 單用最佳","為 nmCRPC 試驗"],"首度將 PARP 抑制劑帶入 mCRPC 第一線合併療法。"],
+["試驗設計","PROTEUS 的 Dual primary endpoints 與設計為何？","pCR/MRD 與 MFS（BICR）；隨機、雙盲、安慰劑對照 Phase 3",["OS 與 PFS；開放性標籤","ORR 與 DoR；單臂","EFS 與 OS；開放性標籤"],"實驗組為 Apalutamide + ADT（RP 前後各 6 個月）。"],
+["結論","PROTEUS 的安全性需留意什麼？","Apalutamide 組皮疹與治療相關嚴重不良事件較多",["Placebo 組不良事件較多","兩組完全相同","Apalutamide 組完全無皮疹"],"Apalutamide 組治療相關死亡中多數與手術相關。"],
+["結論","PROTEUS 試驗中途修正了什麼？","將 PSMA-PET 納入複合 MFS，並在首年收案後新增心血管風險評估",["取消 MFS","改為單臂設計","取消 Placebo 組"],"此為解讀 MFS 結果時需留意的設計重點。"],
+["試驗","哪個試驗開創「三聯療法（ADT + Docetaxel + Abiraterone）」概念？","PEACE-1",["ARASENS","CHAARTED","TITAN"],"ARASENS 的三聯則是 ADT + Docetaxel + Darolutamide。"],
+["試驗","哪個 nmCRPC 試驗以 PSADT ≤ 10 個月、MFS 為 Primary endpoint 並獲 FDA 快速批准？","SPARTAN",["TITAN","PROfound","ARCHES"],"SPARTAN 為 Apalutamide 於 nmCRPC 的 Phase 3。"],
+["試驗","哪個試驗首先把 PARP 抑制劑 + ARPI 帶入 mCRPC 第一線？","TALAPRO-2",["TALAPRO-3","PROfound","CARD"],"TALAPRO-3 則是 mCSPC 階段。"],
+["試驗","哪個試驗為首個 Head-to-Head 比較 RLT 與 Cabazitaxel？","TheraP",["VISION","PSMAfore","ALSYMPCA"],"TheraP 為 Phase 2。"]
+];
+BANK.uc.qs.push(...EX_UC);
+BANK.rcc.qs.push(...EX_RCC);
+BANK.prostate.qs.push(...EX_PROSTATE);
+
+const ICONS = {"uc": "<svg viewBox=\"0 0 48 48\" width=\"42\" height=\"42\" aria-hidden=\"true\"><g fill=\"none\" stroke=\"#fff\" stroke-width=\"3\" stroke-linecap=\"round\"><path d=\"M14 5c0 5 3 7 7 9M34 5c0 5-3 7-7 9\"/><path d=\"M24 36v8\"/></g><path fill=\"#fff\" d=\"M24 12c-8 0-14 5-14 13 0 7 6 12 14 12s14-5 14-12c0-8-6-13-14-13Z\"/></svg>", "rcc": "<svg viewBox=\"0 0 48 48\" width=\"42\" height=\"42\" aria-hidden=\"true\"><path fill=\"#fff\" d=\"M28 5C19 5 13 11 14 19c.6 4.5 3.5 6 3.5 10 0 3.500-2.500 5.500-1.500 8.500 1.200 3.500 6.500 5 12 3.500 8-2 11.500-9 10.500-17.500C38 12 34 5 28 5Z\"/><g fill=\"none\" stroke=\"currentColor\" stroke-width=\"2.200\" stroke-linecap=\"round\"><path d=\"M18 24c4 0 6-1 8-4M18 24c4 1 7 3 9 7\"/></g><path d=\"M17.500 26C14 28 12 32 12 37\" fill=\"none\" stroke=\"#fff\" stroke-width=\"3\" stroke-linecap=\"round\"/></svg>", "prostate": "<svg viewBox=\"0 0 48 48\" width=\"42\" height=\"42\" aria-hidden=\"true\"><path fill=\"#fff\" d=\"M24 12c-9 0-16 3-16 10 0 8 6 15 16 15s16-7 16-15c0-7-7-10-16-10Z\"/><path d=\"M24 3v41\" stroke=\"#fff\" stroke-width=\"5\" stroke-linecap=\"round\"/><path d=\"M24 3v41\" stroke=\"currentColor\" stroke-width=\"1.8\" stroke-linecap=\"round\"/><path d=\"M14 22c2 5 5 8 10 9M34 22c-2 5-5 8-10 9\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\" stroke-linecap=\"round\" opacity=\".55\"/></svg>"};
+/* ---------- helpers ---------- */
+const $ = id => document.getElementById(id);
+const shuffle = a => { a = a.slice(); for(let i=a.length-1;i>0;i--){ const j=Math.floor(Math.random()*(i+1)); [a[i],a[j]]=[a[j],a[i]]; } return a; };
+const esc = s => String(s).replace(/[&<>]/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;'}[c]));
+const store = (k,v) => { try{ if(v===undefined) return localStorage.getItem(k); localStorage.setItem(k,v); }catch(e){} return null; };
+const LABELS = ['A','B','C','D'];
+
+/* ---------- sound ---------- */
+let muted = store('gtq-mute')==='1', actx=null;
+function beep(freq, dur=0.1, type='square', vol=0.06, when=0){
+  if(muted) return;
+  try{
+    actx = actx || new (window.AudioContext||window.webkitAudioContext)();
+    const o=actx.createOscillator(), g=actx.createGain();
+    o.type=type; o.frequency.value=freq; g.gain.value=vol;
+    o.connect(g); g.connect(actx.destination);
+    const t=actx.currentTime+when; o.start(t);
+    g.gain.exponentialRampToValueAtTime(0.0001,t+dur); o.stop(t+dur+0.02);
+  }catch(e){}
+}
+const sfx = {
+  click(){ beep(520,.07) }, pick(){ beep(660,.06); beep(880,.08,'square',.06,.07) },
+  start(){ [392,523,659,784].forEach((f,i)=>beep(f,.12,'square',.06,i*.09)) },
+  win(){ [523,659,784,1047,1319].forEach((f,i)=>beep(f,.16,'square',.07,i*.11)) },
+  ok(){ [440,554,659].forEach((f,i)=>beep(f,.12,'triangle',.08,i*.08)) },
+  lose(){ [330,262,196].forEach((f,i)=>beep(f,.18,'sawtooth',.05,i*.14)) }
+};
+function syncMute(){ $('mute').textContent = muted ? '🔇' : '🔊'; }
+$('mute').onclick = () => { muted=!muted; store('gtq-mute', muted?'1':'0'); syncMute(); sfx.click(); };
+syncMute();
+
+/* ---------- screens ---------- */
+function show(id){
+  document.querySelectorAll('.screen').forEach(s => s.classList.toggle('on', s.id===id));
+  window.scrollTo({top:0});
+}
+
+/* ---------- title ---------- */
+function best(key){ return parseInt(store('gtq-best-'+key)||'0',10) || 0; }
+function renderStages(){
+  $('stages').innerHTML = Object.entries(BANK).map(([k,b],i) => `
+    <button class="stage" data-k="${k}" type="button">
+      <div class="ico" style="background:${b.color};color:${b.color}">${ICONS[k]}</div>
+      <div style="min-width:0;flex:1">
+        <div class="nm" style="color:${b.color}">${esc(b.name)}</div>
+        <div class="ds">${esc(b.zh)}・${esc(b.desc)}</div>
+        <div class="ds" style="font-size:12px">題庫 ${b.qs.length} 題・每次隨機抽 10 題</div>
+        <div class="best">${best(k) ? '★ BEST '+best(k)+' 分' : '尚未挑戰'}</div>
+      </div>
+      <div class="tag">START ▶</div>
+    </button>`).join('');
+}
+$('stages').addEventListener('click', e => {
+  const b = e.target.closest('.stage'); if(!b) return;
+  startQuiz(b.dataset.k);
+});
+
+/* ---------- quiz ---------- */
+let G = null;
+function startQuiz(key){
+  const bank = BANK[key];
+  const picked = shuffle(bank.qs).slice(0,10).map(q => {
+    const opts = shuffle([q[2], ...q[3]]);
+    return { type:q[0], q:q[1], correct:q[2], opts, exp:q[4], ans:null };
+  });
+  G = { key, bank, qs:picked, i:0, locked:false };
+  sfx.start();
+  $('hudStage').textContent = bank.name.toUpperCase();
+  $('hudStage').style.color = bank.color;
+  show('s-quiz');
+  renderQ();
+}
+function renderQ(){
+  const q = G.qs[G.i];
+  G.locked = false;
+  $('hudQ').textContent = 'Q ' + (G.i+1) + ' / 10';
+  $('barFill').style.width = (G.i/10*100) + '%';
+  $('dots').innerHTML = G.qs.map((_,i) => `<b class="${i<G.i?'done':i===G.i?'cur':''}"></b>`).join('');
+  $('qtype').textContent = q.type;
+  $('qtext').textContent = q.q;
+  $('lockmsg').textContent = '';
+  $('opts').innerHTML = q.opts.map((o,i) => `
+    <button class="opt" type="button" data-i="${i}"><span class="k">${LABELS[i]}</span><span>${esc(o)}</span></button>`).join('');
+  const c = $('qcard'); c.classList.remove('shake'); void c.offsetWidth;
+}
+function choose(i){
+  if(!G || G.locked) return;
+  const q = G.qs[G.i];
+  if(i<0 || i>=q.opts.length) return;
+  G.locked = true;
+  q.ans = i;
+  sfx.pick();
+  const btns = $('opts').querySelectorAll('.opt');
+  btns.forEach(b => b.classList.add('lock'));
+  btns[i].classList.add('pick');
+  $('lockmsg').textContent = '✔ LOCKED IN!';
+  setTimeout(() => {
+    if(G.i < 9){ G.i++; renderQ(); }
+    else finish();
+  }, 520);
+}
+$('opts').addEventListener('click', e => {
+  const b = e.target.closest('.opt'); if(!b) return;
+  choose(parseInt(b.dataset.i,10));
+});
+document.addEventListener('keydown', e => {
+  if(!$('s-quiz').classList.contains('on')) return;
+  const k = e.key.toLowerCase();
+  const map = {'1':0,'2':1,'3':2,'4':3,'a':0,'b':1,'c':2,'d':3};
+  if(k in map) choose(map[k]);
+});
+$('quitBtn').onclick = () => {
+  if(confirm('確定放棄本次挑戰並回到癌別選擇畫面？')){ G=null; renderStages(); show('s-title'); }
+};
+
+/* ---------- result ---------- */
+function finish(){
+  $('barFill').style.width = '100%';
+  const ok = G.qs.filter(q => q.opts[q.ans]===q.correct).length;
+  const score = ok*10;
+  const prev = best(G.key);
+  if(score>prev) store('gtq-best-'+G.key, String(score));
+  let rank='C', title='新手住院醫師 ‧ 再接再厲！';
+  if(score===100){ rank='S'; title='GU 大師 ‧ 全部通關！' }
+  else if(score>=80){ rank='A'; title='主治醫師等級 ‧ 非常優秀！' }
+  else if(score>=60){ rank='B'; title='研究醫師等級 ‧ 穩穩前進！' }
+  $('rStage').textContent = '測驗完成 ‧ ' + G.bank.name.toUpperCase();
+  $('rRank').textContent = rank; $('rRank').className = 'rank '+rank;
+  $('rTitle').textContent = title;
+  $('rScore').textContent = score;
+  const st = score>=80?3:score>=60?2:score>=30?1:0;
+  $('rStars').textContent = '★'.repeat(st)+'☆'.repeat(3-st);
+  $('rStars').style.color = 'var(--px)';
+  $('rOk').textContent = ok; $('rBad').textContent = 10-ok; $('rBest').textContent = Math.max(score,prev);
+  $('onlyBad').checked = false;
+  renderReview();
+  show('s-result');
+  if(score>=60){ sfx.win(); confetti(score===100?70:36); } else sfx.lose();
+}
+function renderReview(){
+  const only = $('onlyBad').checked;
+  const html = G.qs.map((q,idx) => {
+    const ok = q.opts[q.ans]===q.correct;
+    if(only && ok) return '';
+    return `<div class="box rv ${ok?'ok':'bad'}">
+      <div class="rt"><span class="mk">${ok?'✔ 答對':'✘ 答錯'}</span><span style="color:var(--muted)">Q${idx+1}・${esc(q.type)}・${ok?'+10':'+0'}</span></div>
+      <p class="rq">${esc(q.q)}</p>
+      <div class="ra you"><em>你的答案</em>${esc(q.opts[q.ans])}</div>
+      ${ok?'':`<div class="ra cor"><em>正確答案</em>${esc(q.correct)}</div>`}
+      <div class="exp"><b>📘 詳解｜</b>${esc(q.exp)}</div>
+    </div>`;
+  }).join('');
+  $('review').innerHTML = html || '<div class="box" style="text-align:center">🎉 沒有錯題，太強了！</div>';
+}
+$('onlyBad').onchange = renderReview;
+function confetti(n){
+  const cols=['#f59e0b','#ec4899','#3b82f6','#10b981','#6366f1'];
+  for(let i=0;i<n;i++){
+    const d=document.createElement('div'); d.className='confetti';
+    d.style.left=Math.random()*100+'vw'; d.style.background=cols[i%cols.length];
+    d.style.animationDuration=(2+Math.random()*2.2)+'s'; d.style.animationDelay=(Math.random()*.6)+'s';
+    document.body.appendChild(d); setTimeout(()=>d.remove(),5200);
+  }
+}
+const again = () => { if(G) startQuiz(G.key); };
+const menu = () => { renderStages(); show('s-title'); sfx.click(); };
+$('againBtn').onclick = $('againBtn2').onclick = again;
+$('menuBtn').onclick = $('menuBtn2').onclick = menu;
+
+renderStages();
+</script>
+</body>
+</html>
