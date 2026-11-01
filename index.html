@@ -5,247 +5,167 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>GU</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Serif+TC:wght@500;700;900&family=Noto+Sans+TC:wght@400;500;700&display=swap" rel="stylesheet">
 <style>
-    :root {
-        --nejm-red: #B31B1B;
-        --ink: #1a1a1a;
-        --ink-soft: #4a4a4a;
-        --rule: #d8d4cc;
-        --paper: #f7f1e3;
-        --c-prostate: #B31B1B;
-        --c-rcc: #2B5D6B;
-        --c-uc: #A6741C;
-    }
+:root{
+  --bg:#FCFBF6; --surface:#FFFFFF; --surface-alt:#F4F1E7; --ink:#1B1B1B; --ink-soft:#4A4842; --muted:#6A675E; --line:#DFDACB;
+  --red:#A6192E; --red-dark:#7C1121; --on-accent:#FFFFFF;
+  --c-prostate:#A6192E; --c-rcc:#2B5D6B; --c-uc:#A6741C;
+  --font-serif:'Noto Serif TC','Songti TC','PMingLiU',Georgia,serif;
+  --font-sans:'Noto Sans TC','PingFang TC','Microsoft JhengHei',-apple-system,BlinkMacSystemFont,'Helvetica Neue',Arial,sans-serif;
+}
+@media (prefers-color-scheme:dark){
+  :root{
+    --bg:#14130F; --surface:#1D1C17; --surface-alt:#26241E; --ink:#EDEAE0; --ink-soft:#C4C0B4; --muted:#9E9A8E; --line:#38352C;
+    --red:#E0687A; --red-dark:#F2A5B0; --on-accent:#11110D;
+    --c-prostate:#E0687A; --c-rcc:#6FB5C7; --c-uc:#E0B050;
+    color-scheme:dark;
+  }
+}
+*{box-sizing:border-box}
+html{color-scheme:light dark}
+body{margin:0;background:var(--bg);color:var(--ink);font-family:var(--font-sans);-webkit-font-smoothing:antialiased}
+.wrap{max-width:720px;margin:0 auto;padding:0 20px}
 
-    * { box-sizing: border-box; }
+/* masthead */
+.masthead{background:var(--surface);border-bottom:3px solid var(--red);padding:calc(34px + env(safe-area-inset-top,0px)) 0 22px;text-align:center}
+.kicker{font-size:11px;letter-spacing:.16em;font-weight:700;color:var(--red);text-transform:uppercase;margin:0 0 8px}
+h1{font-family:var(--font-serif);font-weight:900;font-size:32px;line-height:1.25;margin:0;letter-spacing:.02em}
+.sub{font-size:13px;color:var(--muted);margin:10px 0 0}
+.rule{display:flex;align-items:center;gap:10px;margin:18px auto 0;max-width:260px;color:var(--line)}
+.rule i{flex:1;height:1px;background:var(--line)}
+.rule b{font-family:var(--font-serif);font-size:12px;color:var(--muted);font-weight:500;letter-spacing:.1em}
 
-    body {
-        font-family: Georgia, "Noto Serif TC", "PT Serif", serif;
-        background-color: var(--paper);
-        color: var(--ink);
-        padding: 0;
-        margin: 0;
-    }
+/* quiz hero */
+.quiz{
+  display:flex;align-items:center;gap:16px;margin:28px 0 8px;padding:20px 22px;text-decoration:none;color:#fff;border-radius:14px;position:relative;overflow:hidden;
+  background:linear-gradient(135deg,#6366f1 0%,#a855f7 50%,#ec4899 100%);box-shadow:0 10px 26px rgba(99,102,241,.32);
+  transition:transform .15s ease,box-shadow .15s ease;
+}
+.quiz::after{content:"";position:absolute;right:-30px;top:-40px;width:140px;height:140px;border-radius:50%;background:rgba(255,255,255,.14)}
+.quiz:hover{transform:translateY(-3px);box-shadow:0 16px 32px rgba(99,102,241,.4)}
+.quiz:active{transform:translateY(0)}
+.quiz:focus-visible,.entry:focus-visible,#search:focus-visible{outline:2px solid var(--red);outline-offset:3px}
+.q-ico{flex:0 0 auto;width:58px;height:58px;border-radius:16px;background:rgba(255,255,255,.2);display:flex;align-items:center;justify-content:center;font-size:30px;z-index:1}
+.q-body{flex:1;min-width:0;z-index:1}
+.q-tag{font-size:10.5px;letter-spacing:.14em;font-weight:700;opacity:.85;text-transform:uppercase}
+.q-title{font-family:var(--font-serif);font-weight:900;font-size:22px;line-height:1.3;margin:2px 0}
+.q-desc{font-size:13px;opacity:.92;line-height:1.5}
+.q-go{flex:0 0 auto;z-index:1;background:#fff;color:#6d28d9;font-weight:700;font-size:14px;padding:9px 16px;border-radius:999px;white-space:nowrap}
 
-    .masthead {
-        max-width: 720px;
-        margin: 0 auto;
-        padding: 48px 24px 0;
-    }
+/* search + list */
+.sec{font-family:var(--font-serif);font-weight:700;font-size:15px;margin:30px 2px 12px;display:flex;align-items:baseline;justify-content:space-between}
+.sec span{font-family:var(--font-sans);font-weight:500;font-size:12px;color:var(--muted)}
+#search{width:100%;padding:12px 16px;border:1.4px solid var(--line);border-radius:9px;background:var(--surface);color:var(--ink);font-family:inherit;font-size:16px;outline:none;-webkit-appearance:none;appearance:none;margin-bottom:16px;transition:border-color .2s}
+#search::placeholder{color:var(--muted)}
+#search:focus{border-color:var(--red)}
+#list{list-style:none;padding:0;margin:0;display:grid;gap:14px}
+.entry{
+  --accent:var(--red);display:flex;align-items:center;gap:16px;background:var(--surface);border:1px solid var(--line);border-left:6px solid var(--accent);
+  border-radius:10px;padding:18px 20px;text-decoration:none;color:var(--ink);box-shadow:0 1px 2px rgba(0,0,0,.04);transition:transform .15s,box-shadow .15s;
+}
+.entry:hover{transform:translateY(-2px);box-shadow:0 10px 22px rgba(0,0,0,.1)}
+.entry:active{transform:none}
+.badge{flex:0 0 auto;width:52px;height:52px;border-radius:50%;border:2px solid var(--accent);color:var(--accent);display:flex;align-items:center;justify-content:center;font-family:var(--font-serif);font-weight:700;font-size:13px}
+.e-body{flex:1;min-width:0;display:flex;flex-direction:column;gap:2px}
+.e-tag{font-size:10.5px;letter-spacing:.12em;text-transform:uppercase;color:var(--accent);font-weight:700}
+.e-title{font-family:var(--font-serif);font-size:19px;font-weight:800;line-height:1.3}
+.e-desc{font-size:12.5px;color:var(--muted);line-height:1.5;margin-top:2px}
+.arrow{flex:0 0 auto;font-size:20px;color:var(--accent);opacity:.55;transition:transform .15s,opacity .15s}
+.entry:hover .arrow{transform:translateX(4px);opacity:1}
+.empty{text-align:center;color:var(--muted);padding:28px 0;font-size:14px}
 
-    .kicker {
-        font-family: Georgia, "Noto Serif TC", serif;
-        font-size: 22px;
-        font-weight: 700;
-        letter-spacing: 0.02em;
-        color: var(--ink);
-        text-align: center;
-        margin: 0 0 8px;
-    }
+footer{max-width:720px;margin:36px auto 0;padding:18px 20px calc(40px + env(safe-area-inset-bottom,0px));text-align:center;font-size:11.5px;color:var(--muted);border-top:1px solid var(--line);line-height:1.8}
 
-    .issue-line {
-        font-family: "Helvetica Neue", Arial, sans-serif;
-        font-size: 12px;
-        color: var(--ink-soft);
-        text-align: center;
-        margin: 0 0 20px;
-    }
-
-    .double-rule {
-        border: none;
-        border-top: 3px solid var(--nejm-red);
-        border-bottom: 1px solid var(--nejm-red);
-        height: 4px;
-        margin: 0 0 28px;
-    }
-
-    .container {
-        max-width: 720px;
-        margin: 0 auto;
-        padding: 0 24px 60px;
-    }
-
-    #search {
-        padding: 11px 18px;
-        width: 100%;
-        font-family: "Helvetica Neue", Arial, sans-serif;
-        border: 1px solid var(--rule);
-        border-radius: 2px;
-        background: #fff;
-        font-size: 14px;
-        margin-bottom: 36px;
-        outline: none;
-        color: var(--ink);
-        transition: border-color 0.2s;
-    }
-    #search::placeholder { color: #999; }
-    #search:focus { border-color: var(--nejm-red); }
-
-    #list {
-        list-style: none;
-        padding: 0;
-        margin: 0;
-        display: grid;
-        gap: 16px;
-    }
-
-    #list li { margin: 0; }
-
-    #list a {
-        --accent: var(--nejm-red);
-        display: flex;
-        align-items: center;
-        gap: 18px;
-        background: #fff;
-        border: 1px solid var(--rule);
-        border-left: 6px solid var(--accent);
-        border-radius: 4px;
-        padding: 20px 22px;
-        text-decoration: none;
-        color: var(--ink);
-        box-shadow: 0 1px 2px rgba(0,0,0,0.04);
-        transition: transform 0.15s ease, box-shadow 0.15s ease, border-color 0.15s ease;
-    }
-
-    #list a:hover {
-        transform: translateY(-2px);
-        box-shadow: 0 10px 22px rgba(0,0,0,0.1);
-        border-left-color: var(--accent);
-    }
-
-    #list a:active {
-        transform: translateY(0px);
-        box-shadow: 0 3px 8px rgba(0,0,0,0.08);
-    }
-
-    .entry-badge {
-        flex: 0 0 auto;
-        width: 52px;
-        height: 52px;
-        border-radius: 50%;
-        border: 2px solid var(--accent);
-        color: var(--accent);
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        font-family: Georgia, "Noto Serif TC", serif;
-        font-weight: 700;
-        font-size: 13px;
-        letter-spacing: 0.02em;
-    }
-
-    .entry-body {
-        flex: 1 1 auto;
-        display: flex;
-        flex-direction: column;
-        gap: 2px;
-        min-width: 0;
-    }
-
-    .entry-tag {
-        font-family: "Helvetica Neue", Arial, sans-serif;
-        font-size: 10.5px;
-        letter-spacing: 0.12em;
-        text-transform: uppercase;
-        color: var(--accent);
-        font-weight: 600;
-    }
-
-    .entry-title {
-        font-size: 19px;
-        font-weight: 700;
-        line-height: 1.3;
-    }
-
-    .entry-arrow {
-        flex: 0 0 auto;
-        font-size: 20px;
-        color: var(--accent);
-        opacity: 0.55;
-        transition: transform 0.15s ease, opacity 0.15s ease;
-    }
-
-    #list a:hover .entry-arrow {
-        transform: translateX(4px);
-        opacity: 1;
-    }
-
-    footer {
-        max-width: 720px;
-        margin: 0 auto;
-        padding: 24px 24px 40px;
-        text-align: center;
-        font-family: "Helvetica Neue", Arial, sans-serif;
-        font-size: 11px;
-        color: #999;
-        border-top: 1px solid var(--rule);
-        line-height: 1.8;
-    }
-
-    @media (max-width: 600px) {
-        .masthead { padding: 32px 18px 0; }
-        .container { padding: 0 18px 40px; }
-        .entry-title { font-size: 17px; }
-        #list a { padding: 16px; gap: 14px; }
-        .entry-badge { width: 44px; height: 44px; font-size: 11px; }
-        .entry-arrow { display: none; }
-    }
+@media(max-width:560px){
+  h1{font-size:26px}
+  .quiz{padding:16px;gap:12px}.q-ico{width:48px;height:48px;font-size:25px}.q-title{font-size:19px}.q-go{display:none}
+  .entry{padding:15px;gap:13px}.badge{width:44px;height:44px;font-size:11px}.e-title{font-size:17px}.arrow{display:none}
+}
+@media(prefers-reduced-motion:reduce){*{transition:none!important}}
 </style>
 </head>
 <body>
 
-<div class="masthead">
-    <p class="kicker">機智 GU 住院醫師</p>
-    <p class="issue-line">Genitourinary Oncology — Trial Reference Index</p>
-    <hr class="double-rule">
-</div>
+<header class="masthead">
+  <div class="wrap">
+    <p class="kicker">Genitourinary Oncology · Trial Reference Index</p>
+    <h1>機智 GU 住院醫師</h1>
+    <p class="sub">泌尿腫瘤臨床試驗速查與自我測驗</p>
+    <div class="rule"><i></i><b>◆</b><i></i></div>
+  </div>
+</header>
 
-<div class="container">
-    <input id="search" placeholder="輸入關鍵字篩選報告…">
-    <ul id="list">
-        <li>
-            <a href="prostate.html" style="--accent: var(--c-prostate);">
-                <span class="entry-badge">CaP</span>
-                <span class="entry-body">
-                    <span class="entry-tag">Clinical Trials</span>
-                    <span class="entry-title">攝護腺癌</span>
-                </span>
-                <span class="entry-arrow">→</span>
-            </a>
-        </li>
-        <li>
-            <a href="rcc.html" style="--accent: var(--c-rcc);">
-                <span class="entry-badge">RCC</span>
-                <span class="entry-body">
-                    <span class="entry-tag">Clinical Trials</span>
-                    <span class="entry-title">腎細胞癌</span>
-                </span>
-                <span class="entry-arrow">→</span>
-            </a>
-        </li>
-        <li>
-            <a href="uc.html" style="--accent: var(--c-uc);">
-                <span class="entry-badge">UC</span>
-                <span class="entry-body">
-                    <span class="entry-tag">Clinical Trials</span>
-                    <span class="entry-title">泌尿上皮癌</span>
-                </span>
-                <span class="entry-arrow">→</span>
-            </a>
-        </li>
-    </ul>
-</div>
+<main class="wrap">
+
+  <a class="quiz" href="quiz.html">
+    <span class="q-ico" aria-hidden="true">🎮</span>
+    <span class="q-body">
+      <span class="q-tag">Quiz Mode</span>
+      <span class="q-title">GU Trial Quest 測驗闖關</span>
+      <span class="q-desc">選癌別、隨機 10 題、考完看詳解，驗收你的 Trial 功力</span>
+    </span>
+    <span class="q-go">開始 ▶</span>
+  </a>
+
+  <div class="sec">Clinical Trials<span id="count">3 個癌別</span></div>
+  <input id="search" type="search" placeholder="輸入關鍵字篩選報告…（例如：攝護腺、RCC、尿路上皮）" autocomplete="off" aria-label="篩選報告">
+
+  <ul id="list">
+    <li>
+      <a class="entry" href="prostate.html" style="--accent:var(--c-prostate)">
+        <span class="badge">CaP</span>
+        <span class="e-body">
+          <span class="e-tag">Clinical Trials</span>
+          <span class="e-title">攝護腺癌</span>
+          <span class="e-desc">Prostate・Peri-OP／nmCRPC／mCSPC／mCRPC</span>
+        </span>
+        <span class="arrow">→</span>
+      </a>
+    </li>
+    <li>
+      <a class="entry" href="rcc.html" style="--accent:var(--c-rcc)">
+        <span class="badge">RCC</span>
+        <span class="e-body">
+          <span class="e-tag">Clinical Trials</span>
+          <span class="e-title">腎細胞癌</span>
+          <span class="e-desc">Renal Cell Carcinoma・輔助／mRCC 一線與後線／nccRCC</span>
+        </span>
+        <span class="arrow">→</span>
+      </a>
+    </li>
+    <li>
+      <a class="entry" href="uc.html" style="--accent:var(--c-uc)">
+        <span class="badge">UC</span>
+        <span class="e-body">
+          <span class="e-tag">Clinical Trials</span>
+          <span class="e-title">泌尿上皮癌</span>
+          <span class="e-desc">Urothelial Carcinoma・局部晚期／mUC 一線與二線</span>
+        </span>
+        <span class="arrow">→</span>
+      </a>
+    </li>
+  </ul>
+  <div class="empty" id="empty" hidden>找不到符合的報告</div>
+</main>
 
 <footer>Internal reference only · Not for clinical decision-making without primary source verification<br>Maintained by Y.T. Huang</footer>
 
 <script>
-let input = document.getElementById("search");
-input.addEventListener("keyup", function(){
-    let keyword = this.value.toLowerCase();
-    document.querySelectorAll("#list li").forEach(li => {
-        li.style.display =
-            li.innerText.toLowerCase().includes(keyword) ? "" : "none";
-    });
+const input = document.getElementById("search");
+const items = document.querySelectorAll("#list li");
+input.addEventListener("input", function(){
+  const kw = this.value.trim().toLowerCase();
+  let n = 0;
+  items.forEach(li => {
+    const ok = li.innerText.toLowerCase().includes(kw);
+    li.style.display = ok ? "" : "none";
+    if(ok) n++;
+  });
+  document.getElementById("empty").hidden = n !== 0;
+  document.getElementById("count").textContent = kw ? n + " 筆符合" : "3 個癌別";
 });
 </script>
 </body>
